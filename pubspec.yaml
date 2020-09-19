@@ -1,0 +1,63 @@
+name: shoppingapp
+description: Shopping App
+version: 1.0.5+5
+
+environment:
+  sdk: ">=2.2.2 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  load: ^0.1.6
+  cupertino_icons: ^0.1.3
+  google_fonts: ^1.0.0
+  getflutter: ^1.0.11
+  validators: ^2.0.0+1
+  flutter_icons: ^1.1.0
+  flutter_svg: ^0.17.4
+  provider: ^4.1.3
+  flutter_material_color_picker: ^1.0.5
+  shared_preferences: ^0.5.7
+  convex_bottom_bar: ^2.1.1
+  badges: ^1.1.1
+  page_transition: ^1.1.5
+  carousel_slider: ^2.1.0
+  clippy_flutter: ^1.1.1
+  auto_size_text: ^2.1.0
+  flutter_rating_bar: ^3.0.1+1
+  like_button: ^0.2.0
+  flutter_phoenix: ^0.1.0
+  flutter_countdown_timer: ^1.1.0
+  bubble_tab_indicator: ^0.1.4
+  rxdart: ">=0.23.0 <0.24.0"
+  expandable: ^4.1.3
+  flutter_translate: ^1.6.0
+  searchable_dropdown: ^1.1.3
+
+  uuid: ^2.1.0
+
+  firebase_auth: ^0.18.0+1
+  cloud_firestore: ^0.14.0+2
+  firebase_storage: ^4.0.0
+  google_sign_in: ^4.5.3
+  firebase_core: ^0.5.0
+  firebase_analytics: ^5.0.6
+
+  flutter_open_whatsapp: ^0.1.2
+
+  characters: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/images/
+    - assets/icons/
+    - assets/i18n/

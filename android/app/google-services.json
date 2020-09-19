@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1046473783475",
+    "firebase_url": "https://zubito-25fcc.firebaseio.com",
+    "project_id": "zubito-25fcc",
+    "storage_bucket": "zubito-25fcc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046473783475:android:93d55aba1a075ffecd98c6",
+        "android_client_info": {
+          "package_name": "app.zubito.shopping"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1046473783475-u269cdhr2escg34ac5rptq496bongkdc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.zubito.shopping",
+            "certificate_hash": "33020ceed6a8d1f4d625a05d70cc471b11a79d7e"
+          }
+        },
+        {
+          "client_id": "1046473783475-eil6g62d5knobhmcfg1ghrd14dvrc5cm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgZliXXOCBw0mNYsDLO4QM8P19_1eGmkQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1046473783475-eil6g62d5knobhmcfg1ghrd14dvrc5cm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
