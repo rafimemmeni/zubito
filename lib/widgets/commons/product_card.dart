@@ -87,38 +87,38 @@ class ProductCard extends StatelessWidget {
                                 topLeft: Radius.circular(8),
                                 topRight: Radius.circular(8),
                               ),
-                              child: FutureBuilder(
-                                future: _getImage(context, imageUrl),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                      return Container(
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                1.25,
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                1.25,
-                                        child: snapshot.data,
-                                      );
-                                  }
-                                  // if (snapshot.connectionState ==
-                                  //     ConnectionState.waiting)
-                                  //   return Container(
-                                  //       height:
-                                  //           MediaQuery.of(context).size.height /
-                                  //               1.25,
-                                  //       width:
-                                  //           MediaQuery.of(context).size.width /
-                                  //               1.25,
-                                  //       child: CircularProgressIndicator());
+                              // child: FutureBuilder(
+                              //   future: _getImage(context, imageUrl),
+                              //   builder: (context, snapshot) {
+                              //     if (snapshot.hasData) {
+                              //         return Container(
+                              //           height:
+                              //               MediaQuery.of(context).size.height /
+                              //                   1.25,
+                              //           width:
+                              //               MediaQuery.of(context).size.width /
+                              //                   1.25,
+                              //           child: snapshot.data,
+                              //         );
+                              //     }
+                              //     // if (snapshot.connectionState ==
+                              //     //     ConnectionState.waiting)
+                              //     //   return Container(
+                              //     //       height:
+                              //     //           MediaQuery.of(context).size.height /
+                              //     //               1.25,
+                              //     //       width:
+                              //     //           MediaQuery.of(context).size.width /
+                              //     //               1.25,
+                              //     //       child: CircularProgressIndicator());
 
-                                  return Container();
-                                },
-                              ),
-                              // child: Image.asset(
-                              //   "assets/images/$imageUrl",
-                              //   fit: BoxFit.cover,
+                              //     return Container();
+                              //   },
                               // ),
+                              child: Image.asset(
+                                "assets/images/$imageUrl",
+                                fit: BoxFit.cover,
+                              ),
                             )),
                         Align(
                           alignment: Alignment.bottomLeft,

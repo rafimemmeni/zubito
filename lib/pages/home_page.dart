@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     ProductNotifier productNotifier =
         Provider.of<ProductNotifier>(context, listen: false);
-    getProducts(productNotifier, "Bakery", "Offer");
+   // getProducts(productNotifier, "Bakery", "Offer");
     super.initState();
   }
 

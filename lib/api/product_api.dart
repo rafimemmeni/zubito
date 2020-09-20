@@ -122,6 +122,38 @@ getCartsCount(ProductNotifier productNotifier, String uid) async {
   return productNotifier.cartByUserList;
 }
 
+getOrderByLocation(ProductNotifier productNotifier, String location) async {
+  QuerySnapshot snapshot = await FirebaseFirestore.instance
+      .collection('Order')
+      .where('location', isEqualTo: location)
+      .orderBy("createdAt", descending: true)
+      .get();
+
+  List<Order> _orderList = [];
+  productNotifier.orderByUserList = [];
+  snapshot.docs.forEach((document) async {
+    Order order = Order.fromMap(document.data());
+
+    // QuerySnapshot snapshotch = await FirebaseFirestore.instance
+    //     .collection('Order')
+    //     .doc(document.id)
+    //     .collection("orderItems")
+    //     .get();
+    order.orderItems = [];
+    // snapshotch.docs.forEach((documentchild) {
+    //   order.orderItems.add(OrderItem.fromMap(documentchild.data()));
+    // });
+
+    _orderList.add(order);
+
+    productNotifier.orderByUserList = _orderList;
+  });
+  return productNotifier.orderByUserList;
+  //return productNotifier.orderByUserList;
+
+  //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+}
+
 getOrderByUserId(ProductNotifier productNotifier, String uid) async {
   QuerySnapshot snapshot = await FirebaseFirestore.instance
       .collection('Order')
@@ -276,17 +308,25 @@ uploadProductAndImage(Product product, bool isUpdating, File localFile,
 }
 
 clearCart(String userId) async {
+  QuerySnapshot snapshot = await FirebaseFirestore.instance
+      .collection('Cart')
+      .where('uid', isEqualTo: userId)
+      .get();
+
+  snapshot.docs.forEach((document) async {
+    for (DocumentSnapshot doc in snapshot.docs) {
+      await doc.reference.delete();
+    }
+  });
+
+  print("deleted cart: " + userId);
+}
+
+deleteCartById(String cartId) async {
   CollectionReference productRef =
       FirebaseFirestore.instance.collection('Cart');
-
-  await productRef
-      .where("uid", isEqualTo: userId)
-      .snapshots()
-      .forEach((snapshot) {
-    snapshot.docs.forEach((document) {
-      document.reference.update({"isDeleted": true});
-    });
-  });
+  productRef.doc(cartId).delete();
+  print("deleted cart: " + cartId);
 }
 
 saveCart(Cart cart) async {

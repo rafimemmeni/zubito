@@ -28,8 +28,8 @@ class _SplashScreenState extends State<SplashScreen> {
     //AuthNotifier authNotifier =
     //Provider.of<AuthNotifier>(context, listen: false);
     //initializeCurrentUser(authNotifier);
-        // ProductNotifier productNotifier =
-        // Provider.of<ProductNotifier>(context, listen: false);
+      ProductNotifier productNotifier =
+         Provider.of<ProductNotifier>(context, listen: false);
     super.initState();
     SharedPreferences.getInstance().then((prefs) {
       Timer(
@@ -39,8 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 if (prefs.getString('location') == null) {
                   return LocationPage();
                 } else {
-                  //  productNotifier.currentLocationInfo =
-                  //   prefs.getString('location');
+                productNotifier.currentLocationInfo =
+                    prefs.getString('location');
                   return InitPage();
                 }
               })));

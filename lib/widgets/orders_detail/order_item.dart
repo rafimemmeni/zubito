@@ -99,6 +99,50 @@ class OrderItemList extends StatelessWidget {
                         maxLines: 2,
                         minFontSize: 11,
                       ),
+                      AutoSizeText(
+                        'Delivery Address : ',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: Color(0xFF5D6A78),
+                          fontWeight: FontWeight.w300,
+                        ),
+                        maxLines: 2,
+                        minFontSize: 11,
+                      ),
+
+                      SizedBox(
+                        height: 2,
+                      ),
+                      Container(
+                        width: 150,
+                        child: Text(
+                          order.address,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 5,
+                        ),
+                      ),
+                      AutoSizeText(
+                        'Location : ',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: Color(0xFF5D6A78),
+                          fontWeight: FontWeight.w300,
+                        ),
+                        maxLines: 2,
+                        minFontSize: 11,
+                      ),
+
+                      SizedBox(
+                        height: 2,
+                      ),
+                      Container(
+                        width: 150,
+                        child: Text(
+                          order.location,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 5,
+                        ),
+                      ),
                       Row(
                         children: <Widget>[
                           Text(

@@ -17,6 +17,7 @@ import 'package:shoppingapp/pages/home_navigator.dart';
 import 'package:shoppingapp/pages/login_google.dart';
 import 'package:shoppingapp/pages/my_profile_page.dart';
 import 'package:shoppingapp/pages/orders_detail_page.dart';
+import 'package:shoppingapp/pages/orders_detail_page_customer.dart';
 import 'package:shoppingapp/pages/shopping_cart_page.dart';
 import 'package:shoppingapp/pages/splash_screen.dart';
 import 'package:shoppingapp/utils/drawer_menu/hidden_drawer/hidden_drawer_menu.dart';
@@ -158,7 +159,7 @@ class _InitPageState extends State<InitPage> {
     items.add(new ScreenHiddenDrawer(
         new ItemHiddenMenu(
           icon: Icon(
-            Feather.heart,
+            Feather.truck,
             size: 19,
             color: Colors.white,
           ),
@@ -168,19 +169,20 @@ class _InitPageState extends State<InitPage> {
           colorLineSelected: Colors.orange,
         ),
         OrdersDetailPage()));
-    // items.add(new ScreenHiddenDrawer(
-    //     new ItemHiddenMenu(
-    //       icon: Icon(
-    //         Feather.heart,
-    //         size: 19,
-    //         color: Colors.white,
-    //       ),
-    //       name: 'Favorites',
-    //       baseStyle: GoogleFonts.poppins(
-    //           color: Colors.white.withOpacity(0.6), fontSize: 19.0),
-    //       colorLineSelected: Colors.orange,
-    //     ),
-    //     FavoriteProductsPage()));
+    items.add(new ScreenHiddenDrawer(
+        new ItemHiddenMenu(
+          icon: Icon(
+            Feather.truck,
+            size: 19,
+            color: Colors.white,
+          ),
+          name: 'Manage Order',
+          baseStyle: GoogleFonts.poppins(
+              color: Colors.white.withOpacity(0.6), fontSize: 19.0),
+          colorLineSelected: Colors.orange,
+        ),
+        CustomerOrdersDetailPage()));
+
     items.add(new ScreenHiddenDrawer(
         new ItemHiddenMenu(
           icon: Icon(

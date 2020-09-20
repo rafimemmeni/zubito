@@ -30,7 +30,7 @@ class ProductList extends StatelessWidget {
                 children: <Widget>[
                   ProductCard(
                     themeColor: themeColor,
-                    imageUrl: "Foodgrains.png",
+                    imageUrl: "foodgrains.png",
                     categoryName: "Foodgains",
                     productNotifier: productNotifier,
                   ),
@@ -40,7 +40,7 @@ class ProductList extends StatelessWidget {
                       categoryName: "Bakery"),
                   ProductCard(
                     themeColor: themeColor,
-                    imageUrl: "bakery.png",
+                    imageUrl: "meatFish.png",
                     categoryName: "Meat & Fish",
                   ),
                 ],
@@ -57,12 +57,12 @@ class ProductList extends StatelessWidget {
                   ),
                   ProductCard(
                       themeColor: themeColor,
-                      imageUrl: "fruits.jpg",
+                      imageUrl: "fruits.png",
                       categoryName: "Fruits"),
                   ProductCard(
                     themeColor: themeColor,
-                    imageUrl: "beauty.png",
-                    categoryName: "Beauty",
+                    imageUrl: "veg.png",
+                    categoryName: "Vegitables",
                   ),
                 ],
               )),
@@ -73,12 +73,12 @@ class ProductList extends StatelessWidget {
                 children: <Widget>[
                   ProductCard(
                     themeColor: themeColor,
-                    imageUrl: "beverages.png",
-                    categoryName: "Beverages",
+                    imageUrl: "beauty.png",
+                    categoryName: "Beauty",
                   ),
                   ProductCard(
                       themeColor: themeColor,
-                      imageUrl: "bakery.png",
+                      imageUrl: "snacks.png",
                       categoryName: "Snacks"),
                   ProductCard(
                     themeColor: themeColor,

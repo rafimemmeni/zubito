@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shoppingapp/api/product_api.dart';
 import 'package:shoppingapp/models/cart.dart';
 import 'package:shoppingapp/models/product.dart';
+import 'package:shoppingapp/notifier/auth_notifier.dart';
 import 'package:shoppingapp/notifier/product_notifier.dart';
 import 'package:shoppingapp/pages/shopping_cart_page.dart';
 import 'package:shoppingapp/utils/commons/loaderdialog.dart';
@@ -43,6 +44,17 @@ class ShoppingCartItem extends StatelessWidget {
     return m;
   }
 
+  gettotalCartAmount(
+      ProductNotifier productNotifier, AuthNotifier authNotifier) async {
+    int totalCartAmount = 0;
+    await getCarts(productNotifier, authNotifier.user.uid);
+    for (var cart in productNotifier.cartByUserList) {
+      final product = await getProductById(cart.productId);
+      totalCartAmount = totalCartAmount + (product.price * cart.quantity);
+    }
+    authNotifier.totalCart = totalCartAmount;
+  }
+
   getCurrentProductById(String productId) async {
     //return getProductById(productId);
     product = await getProductById(productId);
@@ -55,7 +67,8 @@ class ShoppingCartItem extends StatelessWidget {
   Widget build(BuildContext context) {
     ProductNotifier productNotifier =
         Provider.of<ProductNotifier>(context, listen: false);
-
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     return FutureBuilder<dynamic>(
         future: getCurrentProductById(cart.productId),
         // ignore: missing_return
@@ -226,7 +239,15 @@ class ShoppingCartItem extends StatelessWidget {
                       size: 18,
                       color: Color(0xFF5D6A78),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      LoaderDialog.showLoadingDialog(
+                          context, _keyLoader, "Removing product from cart...");
+                      await deleteCartById(cart.id);
+                      await gettotalCartAmount(productNotifier, authNotifier);
+                      Navigator.of(_keyLoader.currentContext,
+                              rootNavigator: true)
+                          .pop();
+                    },
                   ),
                 ),
                 Positioned(
@@ -252,7 +273,17 @@ class ShoppingCartItem extends StatelessWidget {
                         ],
                         onChanged: (String item) async {
                           cart.quantity = int.parse(item);
+
                           await saveCart(cart);
+                          //return ShoppingCartPage();
+                          LoaderDialog.showLoadingDialog(
+                              context, _keyLoader, "Refreshing cart...");
+                          await gettotalCartAmount(
+                              productNotifier, authNotifier);
+
+                          Navigator.of(_keyLoader.currentContext,
+                                  rootNavigator: true)
+                              .pop();
                           //Nav.route(context, ShoppingCartPage());
                         },
                         selectedItem: cart.quantity.toString(),

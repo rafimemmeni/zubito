@@ -9,6 +9,7 @@ import 'package:shoppingapp/notifier/product_notifier.dart';
 import 'package:shoppingapp/pages/about_page.dart';
 import 'package:shoppingapp/pages/change_password_page.dart';
 import 'package:shoppingapp/pages/contact_page.dart';
+import 'package:shoppingapp/pages/orders_detail_page_customer.dart';
 import 'package:shoppingapp/pages/profile_settings_page.dart';
 import 'package:shoppingapp/utils/drawer_menu/simple_hidden_drawer/animated_drawer_content.dart';
 import 'package:shoppingapp/utils/drawer_menu/simple_hidden_drawer/provider/simple_hidden_drawer_provider.dart';
@@ -222,26 +223,26 @@ class _HiddenMenuState extends State<HiddenMenu> {
                       //       fontSize: 19.0),
                       //   colorLineSelected: Colors.orange,
                       // ),
-                      InkWell(
-                        onTap: () {
-                          _themeChanger.openFullMaterialColorPicker(themeColor);
-                        },
-                        child: ItemHiddenMenu(
-                          icon: Icon(
-                            Feather.check_square,
-                            size: 19,
-                            color: Colors.white,
-                          ),
-                          name: 'Themes',
-                          baseStyle: GoogleFonts.poppins(
-                              color: Colors.white.withOpacity(0.6),
-                              fontSize: 19.0),
-                          colorLineSelected: Colors.orange,
-                        ),
-                      ),
                       // InkWell(
                       //   onTap: () {
-                      //     Nav.route(context, ChangePasswordPage());
+                      //     _themeChanger.openFullMaterialColorPicker(themeColor);
+                      //   },
+                      //   child: ItemHiddenMenu(
+                      //     icon: Icon(
+                      //       Feather.check_square,
+                      //       size: 19,
+                      //       color: Colors.white,
+                      //     ),
+                      //     name: 'Themes',
+                      //     baseStyle: GoogleFonts.poppins(
+                      //         color: Colors.white.withOpacity(0.6),
+                      //         fontSize: 19.0),
+                      //     colorLineSelected: Colors.orange,
+                      //   ),
+                      // ),
+                      // InkWell(
+                      //   onTap: () {
+                      //     Nav.route(context, CustomerOrdersDetailPage());
                       //   },
                       //   child: ItemHiddenMenu(
                       //     icon: Icon(
@@ -249,7 +250,7 @@ class _HiddenMenuState extends State<HiddenMenu> {
                       //       size: 19,
                       //       color: Colors.white,
                       //     ),
-                      //     name: 'Reset Password',
+                      //     name: 'Manage Order',
                       //     baseStyle: GoogleFonts.poppins(
                       //         color: Colors.white.withOpacity(0.6),
                       //         fontSize: 19.0),
@@ -304,23 +305,23 @@ class _HiddenMenuState extends State<HiddenMenu> {
                     shrinkWrap: true,
                     padding: EdgeInsets.all(0.0),
                     children: <Widget>[
-                      InkWell(
-                        child: ItemHiddenMenu(
-                          icon: Icon(
-                            Feather.list,
-                            size: 19,
-                            color: Colors.white,
-                          ),
-                          name: 'F.A.Q',
-                          baseStyle: GoogleFonts.poppins(
-                              color: Colors.white.withOpacity(0.6),
-                              fontSize: 19.0),
-                          colorLineSelected: Colors.orange,
-                        ),
-                        onTap: () {
-                          Nav.route(context, AboutPage());
-                        },
-                      ),
+                      // InkWell(
+                      //   child: ItemHiddenMenu(
+                      //     icon: Icon(
+                      //       Feather.list,
+                      //       size: 19,
+                      //       color: Colors.white,
+                      //     ),
+                      //     name: 'F.A.Q',
+                      //     baseStyle: GoogleFonts.poppins(
+                      //         color: Colors.white.withOpacity(0.6),
+                      //         fontSize: 19.0),
+                      //     colorLineSelected: Colors.orange,
+                      //   ),
+                      //   onTap: () {
+                      //     Nav.route(context, AboutPage());
+                      //   },
+                      // ),
                       InkWell(
                         onTap: () {
                           Nav.route(context, ContactPage());

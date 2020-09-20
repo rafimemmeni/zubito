@@ -7,6 +7,7 @@ class Order {
   String uid;
   int quantity;
   String location;
+  String address;
   String orderStatus;
   Timestamp createdAt;
   Timestamp updatedAt;
@@ -22,7 +23,8 @@ class Order {
       this.updatedAt,
       this.quantity,
       this.orderItems,
-      this.totalPrice});
+      this.totalPrice,
+      this.address});
 
   Order.fromMap(Map<String, dynamic> data) {
     id = data['id'];
@@ -34,6 +36,7 @@ class Order {
     quantity = data['quantity'];
     orderItems = data['orderItems'];
     totalPrice = data['totalPrice'];
+    address = data['address'];
   }
 
   Map<String, dynamic> toMap() {
@@ -47,6 +50,7 @@ class Order {
       'quantity': quantity,
       'orderItems': orderItems,
       'totalPrice': totalPrice,
+      'address': address
     };
   }
 }

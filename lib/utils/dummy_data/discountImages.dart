@@ -8,8 +8,6 @@ const List<String> discountImageList = [
   'assets/images/prodcut4.png',
   'assets/images/prodcut5.png',
   'assets/images/prodcut1.png',
-  'assets/images/prodcut7.png',
-  'assets/images/prodcut8.png',
 ];
 
 List<Widget> imageSliders = discountImageList

@@ -217,7 +217,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                                   if (_formKey.currentState.validate()) {
                                     _formKey.currentState.save();
                                     userInfo.uid = authNotifier.user.uid;
-                                    
+
                                     await saveUserHandle(userInfo);
 
                                     if (userSaveButtonCaption != "Save") {
@@ -225,6 +225,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                                       order.uid = userInfo.uid;
                                       order.location =
                                           productNotifier.currentLocationInfo;
+                                      order.address = userInfo.address;
                                       order.totalPrice = totalCartAmount;
                                       await saveOrderHandle(
                                           order, productNotifier);
@@ -400,8 +401,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
           context, _keyLoader, "Saving your profile..");
       await saveUser(userInfo);
 
-           Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-          .pop();
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     } catch (error) {
       print(error);
     }
@@ -425,7 +425,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
       }
 
       await saveOrder(order, _orderItems);
-      //await clearCart(order.uid);
+      await clearCart(order.uid);
 
       Navigator.of(_keyLoader.currentContext, rootNavigator: true)
           .pop(); //close the dialoge

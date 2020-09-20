@@ -35,11 +35,6 @@ class HomeWidgetState extends State<ShoppingCartPage>
   int totalCartAmount = 0;
   @override
   void initState() {
-    ProductNotifier productNotifier =
-        Provider.of<ProductNotifier>(context, listen: false);
-    AuthNotifier authNotifier =
-        Provider.of<AuthNotifier>(context, listen: false);
-
     super.initState();
   }
 
@@ -50,6 +45,7 @@ class HomeWidgetState extends State<ShoppingCartPage>
 
   gettotalCartAmount(
       ProductNotifier productNotifier, AuthNotifier authNotifier) async {
+    
     totalCartAmount = 0;
 
     await getCarts(productNotifier, authNotifier.user.uid);
@@ -57,7 +53,7 @@ class HomeWidgetState extends State<ShoppingCartPage>
       final product = await getProductById(cart.productId);
       totalCartAmount = totalCartAmount + (product.price * cart.quantity);
     }
-    productNotifier.totalCart = totalCartAmount;
+    //authNotifier.totalCart = totalCartAmount;
     return totalCartAmount;
   }
 
@@ -76,17 +72,17 @@ class HomeWidgetState extends State<ShoppingCartPage>
         future: gettotalCartAmount(productNotifier, authNotifier),
         // ignore: missing_return
         builder: (context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Stack(children: <Widget>[
-              Text(
-                "    Loading your cart...",
-                style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                    color: Color(0xFF5D6A78)),
-              )
-            ]);
-          }
+          // if (snapshot.connectionState == ConnectionState.waiting) {
+          //   return Stack(children: <Widget>[
+          //     Text(
+          //       "    Loading your cart...",
+          //       style: GoogleFonts.poppins(
+          //           fontWeight: FontWeight.w600,
+          //           fontSize: 12,
+          //           color: Color(0xFF5D6A78)),
+          //     )
+          //   ]);
+          // }
           if (!snapshot.hasData) {
             // LoaderDialog.showLoadingDialog(context, _keyLoader);
             return Stack(children: <Widget>[
@@ -102,8 +98,7 @@ class HomeWidgetState extends State<ShoppingCartPage>
             //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
             return SafeArea(
               child: Scaffold(
-                bottomSheet:
-                    shoppingCartBottomSummary(themeColor, productNotifier),
+                bottomSheet: shoppingCartBottomSummary(themeColor),
                 backgroundColor: whiteColor,
                 body: Stack(
                   children: <Widget>[
@@ -168,8 +163,9 @@ class HomeWidgetState extends State<ShoppingCartPage>
     );
   }
 
-  Widget shoppingCartBottomSummary(
-      ThemeNotifier themeColor, ProductNotifier productNotifier) {
+  Widget shoppingCartBottomSummary(ThemeNotifier themeColor) {
+    final authNotifier = Provider.of<AuthNotifier>(context);
+    //final String total = productNotifier.totalCart.toString();
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -201,7 +197,8 @@ class HomeWidgetState extends State<ShoppingCartPage>
                     fontWeight: FontWeight.bold, color: themeColor.getColor()),
               ),
               Text(
-                productNotifier.totalCart.toString(),
+                //"3",
+                totalCartAmount.toString(),
                 style: GoogleFonts.poppins(color: themeColor.getColor()),
               ),
             ],
