@@ -107,6 +107,10 @@ class MyApp extends StatelessWidget {
 }
 
 class InitPage extends StatefulWidget {
+   final String location;
+  InitPage({Key key, this.location})
+      : super(key: key);
+
   @override
   _InitPageState createState() => _InitPageState();
 }
@@ -205,77 +209,86 @@ class _InitPageState extends State<InitPage> {
     final themeColor = Provider.of<ThemeNotifier>(context);
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-    initializeCurrentUser(authNotifier);
-    return HiddenDrawerMenu(
-      iconMenuAppBar: Padding(
-        padding: EdgeInsets.only(bottom: 6),
-        child: SvgPicture.asset(
-          "assets/icons/ic_menu.svg",
-          height: 20,
-          color: themeColor.getColor(),
-        ),
-      ),
-      isTitleCentered: true,
-      elevationAppBar: 0.0,
-      backgroundColorAppBar: Color.fromARGB(255, 252, 252, 252),
-      tittleAppBar: Padding(
-        child: Text(
-          "Zubito",
-          style: GoogleFonts.poppins(
-            fontSize: 26,
+    ProductNotifier productNotifier =
+        Provider.of<ProductNotifier>(context, listen: false);
+    SharedPreferences.getInstance().then((prefs) {
+      if (prefs.getInt('location') != null) {
+        productNotifier.currentLocationInfo =
+            prefs.getInt('location').toString();
+              }
+        });
+      initializeCurrentUser(authNotifier);
+      return HiddenDrawerMenu(
+        iconMenuAppBar: Padding(
+          padding: EdgeInsets.only(bottom: 6),
+          child: SvgPicture.asset(
+            "assets/icons/ic_menu.svg",
+            height: 20,
             color: themeColor.getColor(),
-            fontWeight: FontWeight.w600,
           ),
         ),
-        padding: EdgeInsets.only(bottom: 18),
-      ),
-      actionsAppBar: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(right: 16, top: 8),
-          child: InkWell(
-            onTap: () {
-              //   //Nav.route(context, ShoppingCartPage());
-              //   //Nav.route(context, ShoppingCartPage());
-            },
-            child: Badge(
-              badgeColor: Color(0xFF5D6A78),
-              alignment: Alignment(-0.5, -1.0),
-              padding: EdgeInsets.all(4),
-              // badgeContent: Text(
-              //   '3',
-              //   style: TextStyle(color: Colors.white, fontSize: 10),
-              // ),
-              // child: SvgPicture.asset(
-              //   "assets/icons/ic_shopping_cart.svg",
-              //   color: themeColor.getColor(),
-              //   height: 26,
-              // ),
+        isTitleCentered: true,
+        elevationAppBar: 0.0,
+        backgroundColorAppBar: Color.fromARGB(255, 252, 252, 252),
+        tittleAppBar: Padding(
+          child: Text(
+            "Zubito",
+            style: GoogleFonts.poppins(
+              fontSize: 26,
+              color: themeColor.getColor(),
+              fontWeight: FontWeight.w600,
             ),
           ),
-        )
-      ],
-      backgroundColorMenu: Colors.blueGrey,
-      screens: items,
-      //    typeOpen: TypeOpen.FROM_RIGHT,
-      enableScaleAnimin: true,
+          padding: EdgeInsets.only(bottom: 18),
+        ),
+        actionsAppBar: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(right: 16, top: 8),
+            child: InkWell(
+              onTap: () {
+                //   //Nav.route(context, ShoppingCartPage());
+                //   //Nav.route(context, ShoppingCartPage());
+              },
+              child: Badge(
+                badgeColor: Color(0xFF5D6A78),
+                alignment: Alignment(-0.5, -1.0),
+                padding: EdgeInsets.all(4),
+                // badgeContent: Text(
+                //   '3',
+                //   style: TextStyle(color: Colors.white, fontSize: 10),
+                // ),
+                // child: SvgPicture.asset(
+                //   "assets/icons/ic_shopping_cart.svg",
+                //   color: themeColor.getColor(),
+                //   height: 26,
+                // ),
+              ),
+            ),
+          )
+        ],
+        backgroundColorMenu: Colors.blueGrey,
+        screens: items,
+        //    typeOpen: TypeOpen.FROM_RIGHT,
+        enableScaleAnimin: true,
 
-      //    enableCornerAnimin: true,
-      slidePercent: 70.0,
-      verticalScalePercent: 90.0,
-      contentCornerRadius: 16.0,
-      //    iconMenuAppBar: Icon(Icons.menu),
-      //    backgroundContent: DecorationImage((image: ExactAssetImage('assets/bg_news.jpg'),fit: BoxFit.cover),
-      //    whithAutoTittleName: true,
-      //    styleAutoTittleName: TextStyle(color: Colors.red),
-      //    actionsAppBar: <Widget>[],
-      //    backgroundColorContent: Colors.blue,
-      //    elevationAppBar: 4.0,
-      //    tittleAppBar: Center(child: Icon(Icons.ac_unit),),
-      //    enableShadowItensMenu: true,
+        //    enableCornerAnimin: true,
+        slidePercent: 70.0,
+        verticalScalePercent: 90.0,
+        contentCornerRadius: 16.0,
+        //    iconMenuAppBar: Icon(Icons.menu),
+        //    backgroundContent: DecorationImage((image: ExactAssetImage('assets/bg_news.jpg'),fit: BoxFit.cover),
+        //    whithAutoTittleName: true,
+        //    styleAutoTittleName: TextStyle(color: Colors.red),
+        //    actionsAppBar: <Widget>[],
+        //    backgroundColorContent: Colors.blue,
+        //    elevationAppBar: 4.0,
+        //    tittleAppBar: Center(child: Icon(Icons.ac_unit),),
+        //    enableShadowItensMenu: true,
 //      backgroundMenu: DecorationImage(
 //          image: NetworkImage(
 //              'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQUQ0rrFB0d5E69Qpk55mtLAc0Wd8gsk46mbZLYSqWy0TgoZxhG&usqp=CAU'),
 //          fit: BoxFit.cover),
-    );
+      );
+    
   }
 }

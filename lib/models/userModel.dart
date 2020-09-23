@@ -6,6 +6,7 @@ class UserModel {
   String name;
   String mob;
   String address;
+  String location;
   Timestamp createdAt;
   Timestamp updatedAt;
 
@@ -15,6 +16,7 @@ class UserModel {
     this.name,
     this.mob,
     this.address,
+    this.location,
   });
 
   UserModel.fromMap(Map<String, dynamic> data) {
@@ -25,6 +27,7 @@ class UserModel {
     address = data['address'];
     createdAt = data['createdAt'];
     updatedAt = data['updatedAt'];
+    location = data['location'];
   }
 
   Map<String, dynamic> toMap() {
@@ -36,6 +39,7 @@ class UserModel {
       'address': address,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
+      'location': location,
     };
   }
 }

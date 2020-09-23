@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingapp/api/product_api.dart';
 import 'package:shoppingapp/main.dart';
+import 'package:shoppingapp/models/userModel.dart';
 import 'package:shoppingapp/notifier/auth_notifier.dart';
 import 'package:shoppingapp/notifier/product_notifier.dart';
+import 'package:shoppingapp/utils/commons/loaderdialog.dart';
 import 'package:shoppingapp/utils/drop_down_menu/find_dropdown.dart';
 import 'package:shoppingapp/utils/navigator.dart';
 import 'package:shoppingapp/utils/screen.dart';
@@ -32,6 +34,18 @@ class _LocationFormState extends State<LocationForm> {
     super.initState();
   }
 
+  Future<void> saveUserHandle(UserModel userInfo) async {
+    try {
+      // LoaderDialog.showLoadingDialog(
+      //     context, _keyLoader, "Saving your profile..");
+      await saveUser(userInfo);
+
+      // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+    } catch (error) {
+      print(error);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeColor = Provider.of<ThemeNotifier>(context);
@@ -39,7 +53,8 @@ class _LocationFormState extends State<LocationForm> {
         Provider.of<AuthNotifier>(context, listen: false);
     ProductNotifier productNotifier =
         Provider.of<ProductNotifier>(context, listen: false);
-
+    UserModel userInfo = UserModel();
+    model.location != null ? model.location : "Nadapuram";
     return Container(
       padding: EdgeInsets.only(top: 24, right: 42, left: 42),
       child: Form(
@@ -48,14 +63,20 @@ class _LocationFormState extends State<LocationForm> {
           children: <Widget>[
             FindDropdown(
               items: ["Nadapuram", "Vadakara"],
+              validate: (String value) {
+                if (value.length < 1) {
+                  return 'Please select your nearest locaiton.';
+                }
+                _formKey.currentState.save();
+                return null;
+              },
               onChanged: (String value) async {
                 model.location = value;
                 var prefs = await SharedPreferences.getInstance();
                 prefs.setString('location', value);
-                productNotifier.currentLocationInfo =
-                    prefs.getString('location');
+                productNotifier.currentLocationInfo = value;
               },
-              selectedItem: "Nadapuram",
+              selectedItem: model.location,
               isUnderLine: false,
               backgroundColor: Color(0xFFEEEEF3),
               labelStyle: GoogleFonts.poppins(
@@ -76,16 +97,15 @@ class _LocationFormState extends State<LocationForm> {
                   ),
                   color: themeColor.getColor(),
                   onPressed: () async {
-                    if (_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
-                      await initializeCurrentUser(authNotifier);
-                      Nav.routeReplacement(context, InitPage());
-
-//                      Navigator.push(
-//                          context,
-//                          MaterialPageRoute(
-//                              builder: (context) => Result(model: this.model)));
-                    }
+                    if (model.location != null) {
+                      if (_formKey.currentState.validate()) {
+                        _formKey.currentState.save();
+                        await initializeCurrentUser(authNotifier);
+                        productNotifier.currentLocationInfo = model.location;
+                        // await saveUserHandle(userInfo);
+                        Nav.routeReplacement(context, InitPage());
+                      }
+                    } else {}
                   },
                   child: Text(
                     'Start Shopping',

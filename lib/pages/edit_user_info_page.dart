@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingapp/api/product_api.dart';
 import 'package:shoppingapp/models/userModel.dart';
 import 'package:shoppingapp/models/order.dart';
@@ -223,13 +224,24 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                                     if (userSaveButtonCaption != "Save") {
                                       Order order = Order();
                                       order.uid = userInfo.uid;
-                                      order.location =
-                                          productNotifier.currentLocationInfo;
+
                                       order.address = userInfo.address;
-                                      order.totalPrice = totalCartAmount;
-                                      await saveOrderHandle(
-                                          order, productNotifier);
-                                      openAlertBox(context, themeColor);
+                                      SharedPreferences.getInstance()
+                                          .then((prefs) async {
+                                        if (prefs.getInt('location') != null) {
+                                          productNotifier.currentLocationInfo =
+                                              prefs
+                                                  .getInt('location')
+                                                  .toString();
+                                        }
+                                        order.location =
+                                            productNotifier.currentLocationInfo;
+
+                                        order.totalPrice = totalCartAmount;
+                                        await saveOrderHandle(
+                                            order, productNotifier);
+                                        openAlertBox(context, themeColor);
+                                      });
                                     } else {
                                       Scaffold.of(context)
                                           .showSnackBar(SnackBar(

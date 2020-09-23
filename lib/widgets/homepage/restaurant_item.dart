@@ -35,7 +35,7 @@ class RestaurantItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Nav.route(context, ProductDetailPage());
+        //Nav.route(context, ProductDetailPage());
       },
       child: Stack(
         children: <Widget>[
