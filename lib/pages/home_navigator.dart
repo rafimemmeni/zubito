@@ -10,6 +10,7 @@ import 'package:shoppingapp/pages/edit_user_info_page.dart';
 import 'package:shoppingapp/pages/favorite_products_page.dart';
 import 'package:shoppingapp/pages/home_page.dart';
 import 'package:shoppingapp/pages/my_profile_page.dart';
+import 'package:shoppingapp/pages/orders_detail_page.dart';
 import 'package:shoppingapp/pages/shopping_cart_page.dart';
 import 'package:shoppingapp/utils/theme_notifier.dart';
 
@@ -23,10 +24,10 @@ class _HomeNavigatorState extends State<HomeNavigator> {
 
   List<Widget> _pages = [
     HomePage(),
-    // CategoryPage(),
+    HomePage(),
     ShoppingCartPage(),
-    // FavoriteProductsPage(),
-    EditUserInfoPage(userSaveButtonCaption : "Save")
+    OrdersDetailPage(),
+    EditUserInfoPage(userSaveButtonCaption: "Save")
   ];
 
   @override
@@ -53,9 +54,9 @@ class _HomeNavigatorState extends State<HomeNavigator> {
           style: TabStyle.fixedCircle,
           items: <TabItem>[
             TabItem(icon: Feather.home, title: ''),
-            // TabItem(icon: Feather.search, title: ''),
+            TabItem(icon: Feather.search, title: ''),
             TabItem(icon: bottomCenterItem(themeColor), title: ''),
-            // TabItem(icon: Feather.heart, title: ''),
+            TabItem(icon: Feather.truck, title: ''),
             TabItem(icon: Feather.user, title: ''),
           ],
         ),

@@ -50,7 +50,7 @@ class OrderItemList extends StatelessWidget {
                           "assets/images/$imageUrl",
                           fit: BoxFit.cover,
                         )),
-                    width: 110,
+                    width: 160,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8),

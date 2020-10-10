@@ -11,6 +11,8 @@ import 'package:shoppingapp/notifier/product_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:shoppingapp/utils/navigator.dart';
 
+import '../../config.dart';
+
 class CategoryListView extends StatelessWidget {
   const CategoryListView({Key key}) : super(key: key);
 
@@ -26,16 +28,17 @@ class CategoryListView extends StatelessWidget {
         // 'ic_couch.svg',
         //'ic_baby.svg',
         //'ic_headphone.svg'
-        'ic_whatsapp.svg'
-        // 'ic_glass.svg',
+        'ic_whatsapp.svg',
+        'ic_medical.svg',
+        'restaurant.svg',
         // 'ic_couch.svg',
         // 'ic_lamp.svg'
       ],
       categoryTitle: [
         //'My Orders',
-        'Order via Whatsapp'
-        // 'Bakery',
-        // 'Fruits',
+        'Whatsapp Order',
+        '  Medicine',
+        '  Restaurant',
         // 'Baby Care',
         // 'Beauty & Hygiene',
         // 'Meat & Fish',
@@ -73,11 +76,16 @@ class CategoriesListView extends StatelessWidget {
             onTap: () {
               //productNotifier.currentCategory = categoryTitle[index];
               //OrdersDetailPage();
-              if (categoryTitle[index] == "Order via Whatsapp") {
+              if (categoryTitle[index] == "Whatsapp Order") {
                 FlutterOpenWhatsapp.sendSingleMessage(
-                    "919496341767", "Hi Zubito");
-              } else {
-                Nav.route(context, OrdersDetailPage());
+                    "918129196970", "Hi Zubito");
+              } else if (categoryTitle[index].trim() == "Medicine") {
+                FlutterOpenWhatsapp.sendSingleMessage(
+                    "918129196970", "Hi Zubito, I need to order a medicine.");
+              } else if (categoryTitle[index].trim() == "Restaurant") {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                    backgroundColor: mainColor, content: Text('Coming soon')));
+                //Nav.route(context, OrdersDetailPage());
                 // Navigator.push(
                 //   context,
                 //   PageTransition(

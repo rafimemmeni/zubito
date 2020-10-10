@@ -14,6 +14,7 @@ import 'package:shoppingapp/pages/category_page.dart';
 import 'package:shoppingapp/pages/edit_user_info_page.dart';
 import 'package:shoppingapp/pages/favorite_products_page.dart';
 import 'package:shoppingapp/pages/home_navigator.dart';
+import 'package:shoppingapp/pages/location_page.dart';
 import 'package:shoppingapp/pages/login_google.dart';
 import 'package:shoppingapp/pages/my_profile_page.dart';
 import 'package:shoppingapp/pages/orders_detail_page.dart';
@@ -107,9 +108,8 @@ class MyApp extends StatelessWidget {
 }
 
 class InitPage extends StatefulWidget {
-   final String location;
-  InitPage({Key key, this.location})
-      : super(key: key);
+  final String location;
+  InitPage({Key key, this.location}) : super(key: key);
 
   @override
   _InitPageState createState() => _InitPageState();
@@ -120,13 +120,14 @@ class _InitPageState extends State<InitPage> {
 
   @override
   void initState() {
+    var icon2 = Icon(
+      Feather.home,
+      size: 19,
+      color: Colors.white,
+    );
     items.add(new ScreenHiddenDrawer(
         new ItemHiddenMenu(
-          icon: Icon(
-            Feather.home,
-            size: 19,
-            color: Colors.white,
-          ),
+          icon: icon2,
           name: "Home Page",
           baseStyle: GoogleFonts.poppins(
               color: Colors.white.withOpacity(0.6), fontSize: 19.0),
@@ -211,84 +212,89 @@ class _InitPageState extends State<InitPage> {
         Provider.of<AuthNotifier>(context, listen: false);
     ProductNotifier productNotifier =
         Provider.of<ProductNotifier>(context, listen: false);
-    SharedPreferences.getInstance().then((prefs) {
-      if (prefs.getInt('location') != null) {
-        productNotifier.currentLocationInfo =
-            prefs.getInt('location').toString();
-              }
-        });
-      initializeCurrentUser(authNotifier);
-      return HiddenDrawerMenu(
-        iconMenuAppBar: Padding(
-          padding: EdgeInsets.only(bottom: 6),
-          child: SvgPicture.asset(
-            "assets/icons/ic_menu.svg",
-            height: 20,
-            color: themeColor.getColor(),
-          ),
+    if (widget.location != null) {
+      productNotifier.currentLocationInfo = widget.location;
+    }
+
+    // SharedPreferences.getInstance().then((prefs) {
+    //   if (prefs.getInt('location') != null) {
+    //   }
+    // });
+    initializeCurrentUser(authNotifier);
+    return HiddenDrawerMenu(
+      iconMenuAppBar: Padding(
+        padding: EdgeInsets.only(bottom: 6),
+        child: SvgPicture.asset(
+          "assets/icons/ic_menu.svg",
+          height: 20,
+          color: themeColor.getColor(),
         ),
-        isTitleCentered: true,
-        elevationAppBar: 0.0,
-        backgroundColorAppBar: Color.fromARGB(255, 252, 252, 252),
-        tittleAppBar: Padding(
-          child: Text(
-            "Zubito",
-            style: GoogleFonts.poppins(
-              fontSize: 26,
-              color: themeColor.getColor(),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          padding: EdgeInsets.only(bottom: 18),
+      ),
+      isTitleCentered: true,
+      elevationAppBar: 0.0,
+      backgroundColorAppBar: Color.fromARGB(255, 252, 252, 252),
+      tittleAppBar: Padding(
+        child: Image.asset(
+          "assets/icons/titlebar_icon.png",
+          height: 20,
+          //color: themeColor.getColor(),
         ),
-        actionsAppBar: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 16, top: 8),
-            child: InkWell(
-              onTap: () {
-                //   //Nav.route(context, ShoppingCartPage());
-                //   //Nav.route(context, ShoppingCartPage());
-              },
-              child: Badge(
-                badgeColor: Color(0xFF5D6A78),
-                alignment: Alignment(-0.5, -1.0),
-                padding: EdgeInsets.all(4),
-                // badgeContent: Text(
-                //   '3',
-                //   style: TextStyle(color: Colors.white, fontSize: 10),
-                // ),
-                // child: SvgPicture.asset(
-                //   "assets/icons/ic_shopping_cart.svg",
-                //   color: themeColor.getColor(),
-                //   height: 26,
-                // ),
+        // child: IconButton(
+        //   icon: Icon(
+        //     Icons.location_on,
+        //     color: themeColor.getColor(),
+        //     size: 20,
+        //   ),
+        // child: Text(
+        //   "Zubito",
+        //   style: GoogleFonts.poppins(
+        //     fontSize: 26,
+        //     color: themeColor.getColor(),
+        //     fontWeight: FontWeight.w600,
+        //   ),
+        //),
+        padding: EdgeInsets.all(1.0),
+      ),
+      actionsAppBar: <Widget>[
+        Padding(
+          child: InkWell(
+            onTap: () {
+              Nav.route(context, LocationPage());
+            },
+            child: Text(
+              productNotifier.currentLocationInfo != null
+                  ? productNotifier.currentLocationInfo
+                  : " ",
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: Colors.red,
+                fontWeight: FontWeight.w500,
               ),
             ),
-          )
-        ],
-        backgroundColorMenu: Colors.blueGrey,
-        screens: items,
-        //    typeOpen: TypeOpen.FROM_RIGHT,
-        enableScaleAnimin: true,
-
-        //    enableCornerAnimin: true,
-        slidePercent: 70.0,
-        verticalScalePercent: 90.0,
-        contentCornerRadius: 16.0,
-        //    iconMenuAppBar: Icon(Icons.menu),
-        //    backgroundContent: DecorationImage((image: ExactAssetImage('assets/bg_news.jpg'),fit: BoxFit.cover),
-        //    whithAutoTittleName: true,
-        //    styleAutoTittleName: TextStyle(color: Colors.red),
-        //    actionsAppBar: <Widget>[],
-        //    backgroundColorContent: Colors.blue,
-        //    elevationAppBar: 4.0,
-        //    tittleAppBar: Center(child: Icon(Icons.ac_unit),),
-        //    enableShadowItensMenu: true,
-//      backgroundMenu: DecorationImage(
-//          image: NetworkImage(
-//              'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQUQ0rrFB0d5E69Qpk55mtLAc0Wd8gsk46mbZLYSqWy0TgoZxhG&usqp=CAU'),
-//          fit: BoxFit.cover),
-      );
-    
+          ),
+          padding: EdgeInsets.all(8.0),
+        ),
+        // Padding(
+        //   //width: 32,
+        //   padding: EdgeInsets.all(1),
+        //   child: IconButton(
+        //     icon: Icon(
+        //       Icons.location_on,
+        //       color: themeColor.getColor(),
+        //       size: 20,
+        //     ),
+        //     onPressed: () {
+        //       Nav.route(context, LocationPage());
+        //     },
+        //   ),
+        // ),
+      ],
+      backgroundColorMenu: Colors.blueGrey,
+      screens: items,
+      enableScaleAnimin: true,
+      slidePercent: 70.0,
+      verticalScalePercent: 90.0,
+      contentCornerRadius: 16.0,
+    );
   }
 }

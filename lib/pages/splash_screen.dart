@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 if (prefs.getString('location') == null) {
                   return LocationPage();
                 } else {
-                  return InitPage();
+                  return InitPage(location: prefs.getString('location'));
                 }
               })));
     });
@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Container(
           height: ScreenUtil.getHeight(context),
           width: ScreenUtil.getWidth(context),
-          child: Image.asset('assets/images/rosensaa.png'),
+          child: Image.asset('assets/images/start_up.png'),
         ),
       ),
     );

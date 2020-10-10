@@ -113,164 +113,165 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
           statusBarIconBrightness: Brightness.dark),
     );
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xFFFCFCFC),
-        body: Builder(
-          // Create an inner BuildContext so that the onPressed methods
-          // can refer to the Scaffold with Scaffold.of().
-          builder: (BuildContext context) {
-            return Container(
-              padding: EdgeInsets.all(24),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "User information",
-                        style: GoogleFonts.poppins(
-                            fontSize: 18, color: Color(0xFF5D6A78)),
-                      ),
-                      Container(
-                          width: 28,
-                          child: Divider(
-                            color: themeColor.getColor(),
-                            height: 3,
-                            thickness: 2,
-                          )),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Column(
-                        children: <Widget>[
-                          NewAddressInput(
-                              labelText: "Name",
-                              hintText: 'Name',
-                              isEmail: true,
-                              validator: (String value) {
-                                if (value.length < 1) {
-                                  return 'Please enter the Name';
-                                }
-                                _formKey.currentState.save();
-                                return null;
-                              },
-                              onSaved: (String value) {
-                                //model.email = value;
-                                userInfo.name = value;
-                              },
-                              value:
-                                  userInfo.name != null ? userInfo.name : ""),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          NewAddressInput(
-                              labelText: "Mobile",
-                              hintText: 'xxxxxxxxxx',
-                              keyboardType: TextInputType.phone,
-                              validator: (String value) {
-                                if (value.length < 1) {
-                                  return 'Please enter a valid Mobile No.';
-                                }
-                                if (value.length < 10 || value.length > 10) {
-                                  return 'Please enter a valid Mobile No.';
-                                }
-                                _formKey.currentState.save();
-                                return null;
-                              },
-                              onSaved: (String value) {
-                                userInfo.mob = value;
-                              },
-                              value: userInfo.mob != null ? userInfo.mob : ""),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          NewAddressInput(
-                              labelText: "Address",
-                              hintText: 'Enter Address here',
-                              isEmail: true,
-                              validator: (String value) {
-                                if (value.length < 1) {
-                                  return 'Please enter the Address.';
-                                }
-                                _formKey.currentState.save();
-                                return null;
-                              },
-                              onSaved: (String value) {
-                                userInfo.address = value;
-                              },
-                              value: userInfo.address != null
-                                  ? userInfo.address
-                                  : ""),
-                          Container(
-                            height: 42,
-                            width: ScreenUtil.getWidth(context),
-                            margin: EdgeInsets.only(top: 32, bottom: 12),
-                            child: ShadowButton(
-                              borderRadius: 12,
-                              height: 40,
-                              child: FlatButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(8.0),
-                                ),
-                                color: themeColor.getColor(),
-                                onPressed: () async {
-                                  if (_formKey.currentState.validate()) {
-                                    _formKey.currentState.save();
-                                    userInfo.uid = authNotifier.user.uid;
-
-                                    await saveUserHandle(userInfo);
-
-                                    if (userSaveButtonCaption != "Save") {
-                                      Order order = Order();
-                                      order.uid = userInfo.uid;
-
-                                      order.address = userInfo.address;
-                                      SharedPreferences.getInstance()
-                                          .then((prefs) async {
-                                        if (prefs.getInt('location') != null) {
-                                          productNotifier.currentLocationInfo =
-                                              prefs
-                                                  .getInt('location')
-                                                  .toString();
-                                        }
-                                        order.location =
-                                            productNotifier.currentLocationInfo;
-
-                                        order.totalPrice = totalCartAmount;
-                                        await saveOrderHandle(
-                                            order, productNotifier);
-                                        openAlertBox(context, themeColor);
-                                      });
-                                    } else {
-                                      Scaffold.of(context)
-                                          .showSnackBar(SnackBar(
-                                        backgroundColor: mainColor,
-                                        content: Text(
-                                            'Your Profile is successfully Saved'),
-                                      ));
-                                    }
+      child: WillPopScope(
+        onWillPop: () {
+          return Nav.routeReplacement(context, InitPage());
+        },
+        child: Scaffold(
+          backgroundColor: Color(0xFFFCFCFC),
+          body: Builder(
+            // Create an inner BuildContext so that the onPressed methods
+            // can refer to the Scaffold with Scaffold.of().
+            builder: (BuildContext context) {
+              return Container(
+                padding: EdgeInsets.all(24),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "User information",
+                          style: GoogleFonts.poppins(
+                              fontSize: 18, color: Color(0xFF5D6A78)),
+                        ),
+                        Container(
+                            width: 28,
+                            child: Divider(
+                              color: themeColor.getColor(),
+                              height: 3,
+                              thickness: 2,
+                            )),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Column(
+                          children: <Widget>[
+                            NewAddressInput(
+                                labelText: "Name",
+                                hintText: 'Name',
+                                isEmail: true,
+                                validator: (String value) {
+                                  if (value.length < 1) {
+                                    return 'Please enter the Name';
                                   }
+                                  _formKey.currentState.save();
+                                  return null;
                                 },
-                                child: Text(
-                                  userSaveButtonCaption,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w400,
+                                onSaved: (String value) {
+                                  //model.email = value;
+                                  userInfo.name = value;
+                                },
+                                value:
+                                    userInfo.name != null ? userInfo.name : ""),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            NewAddressInput(
+                                labelText: "Mobile",
+                                hintText: 'xxxxxxxxxx',
+                                keyboardType: TextInputType.phone,
+                                validator: (String value) {
+                                  if (value.length < 1) {
+                                    return 'Please enter a valid Mobile No.';
+                                  }
+                                  if (value.length < 10 || value.length > 10) {
+                                    return 'Please enter a valid Mobile No.';
+                                  }
+                                  _formKey.currentState.save();
+                                  return null;
+                                },
+                                onSaved: (String value) {
+                                  userInfo.mob = value;
+                                },
+                                value:
+                                    userInfo.mob != null ? userInfo.mob : ""),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            NewAddressInput(
+                                labelText: "Address",
+                                hintText: 'Enter Address here',
+                                isEmail: true,
+                                validator: (String value) {
+                                  if (value.length < 1) {
+                                    return 'Please enter the Address.';
+                                  }
+                                  _formKey.currentState.save();
+                                  return null;
+                                },
+                                onSaved: (String value) {
+                                  userInfo.address = value;
+                                },
+                                value: userInfo.address != null
+                                    ? userInfo.address
+                                    : ""),
+                            Container(
+                              height: 42,
+                              width: ScreenUtil.getWidth(context),
+                              margin: EdgeInsets.only(top: 32, bottom: 12),
+                              child: ShadowButton(
+                                borderRadius: 12,
+                                height: 40,
+                                child: FlatButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(8.0),
+                                  ),
+                                  color: themeColor.getColor(),
+                                  onPressed: () async {
+                                    if (_formKey.currentState.validate()) {
+                                      _formKey.currentState.save();
+                                      userInfo.uid = authNotifier.user.uid;
+
+                                      await saveUserHandle(userInfo);
+
+                                      if (userSaveButtonCaption != "Save") {
+                                        Order order = Order();
+                                        order.uid = userInfo.uid;
+
+                                        order.address = userInfo.address;
+                                        SharedPreferences.getInstance()
+                                            .then((prefs) async {
+                                          order.location = productNotifier
+                                              .currentLocationInfo;
+
+                                          order.totalPrice = totalCartAmount;
+                                          await saveOrderHandle(
+                                              order, productNotifier);
+                                          openAlertBox(context, themeColor);
+                                        });
+                                      } else {
+                                        Scaffold.of(context)
+                                            .showSnackBar(SnackBar(
+                                          backgroundColor: mainColor,
+                                          content: Text(
+                                              'Your Profile is successfully Saved'),
+                                        ));
+                                      }
+                                    }
+                                  },
+                                  child: Text(
+                                    userSaveButtonCaption,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      )
-                    ],
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

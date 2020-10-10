@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Color.fromARGB(255, 252, 252, 252),
       body: ListView(
         children: <Widget>[
-          SearchBox(),
+         // SearchBox(),
 //              FlatButton(
 //                onPressed: () {
 //                  _onActionSheetPress(context);

@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:getflutter/components/button/gf_button.dart';
+import 'package:getflutter/shape/gf_button_shape.dart';
+import 'package:getflutter/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shoppingapp/api/product_api.dart';
@@ -13,12 +16,16 @@ import 'package:shoppingapp/models/cart.dart';
 import 'package:shoppingapp/pages/filter_page.dart';
 import 'package:shoppingapp/pages/product_detail.dart';
 import 'package:shoppingapp/pages/shopping_cart_page.dart';
+import 'package:shoppingapp/utils/commons/colors.dart';
 import 'package:shoppingapp/utils/commons/loaderdialog.dart';
+import 'package:shoppingapp/utils/drop_down_menu/find_dropdown.dart';
 import 'package:shoppingapp/utils/navigator.dart';
 import 'package:shoppingapp/utils/screen.dart';
 import 'package:shoppingapp/utils/theme_notifier.dart';
 import 'package:shoppingapp/notifier/product_notifier.dart';
 import 'package:shoppingapp/notifier/auth_notifier.dart';
+
+import 'edit_user_info_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({
@@ -26,21 +33,47 @@ class SearchPage extends StatefulWidget {
     this.categoryName,
   }) : super(key: key);
   final String categoryName;
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
+  int piece = 1;
   String deneme = "Dursun";
   Cart cart;
+  int totalCartAmount = 0;
   @override
   void initState() {
     ProductNotifier productNotifier =
         Provider.of<ProductNotifier>(context, listen: false);
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
 
     getProducts(productNotifier, widget.categoryName, "All");
+    gettotalCartAmount(productNotifier, authNotifier);
     super.initState();
   }
+  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+
+  Future<void> gettotalCartAmount(ProductNotifier productNotifier, AuthNotifier authNotifier) async {
+    totalCartAmount = 0;
+    
+    await getCarts(productNotifier, authNotifier.user.uid);
+    for (var cart in productNotifier.cartByUserList) {
+      final product = await getProductById(cart.productId);
+      totalCartAmount = totalCartAmount + (product.price * cart.quantity);
+    }
+    //Navigator.of(_drawerKey.currentContext, rootNavigator: true).pop();
+    setState(() {
+      totalCartAmount = totalCartAmount;
+    });
+
+    //authNotifier.totalCart = totalCartAmount;
+    return totalCartAmount;
+    
+  }
+
 
   static Future<dynamic> loadFromStorage(
       BuildContext context, String image) async {
@@ -59,7 +92,7 @@ class _SearchPageState extends State<SearchPage> {
     return m;
   }
 
-  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  
 
   Future<void> saveCartHandle(Cart cart) async {
     LoaderDialog.showLoadingDialog(
@@ -92,6 +125,7 @@ class _SearchPageState extends State<SearchPage> {
 
     return SafeArea(
       child: Scaffold(
+        bottomSheet: shoppingCartBottomSummary(themeColor),
         backgroundColor: Color.fromARGB(255, 252, 252, 252),
         key: _drawerKey, // assign key to Scaffold
         body: Builder(
@@ -287,8 +321,8 @@ class _SearchPageState extends State<SearchPage> {
                       GridView.count(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.7,
+                        crossAxisCount: 1,
+                        childAspectRatio: 1.7,
                         children: <Widget>[
                           for (var product
                               in productNotifier.productByCategoryList)
@@ -424,7 +458,9 @@ class _SearchPageState extends State<SearchPage> {
   Stack productSearchItem(BuildContext context, ThemeNotifier themeColor,
       Product product, GlobalKey<ScaffoldState> _drawerKey) {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
-
+    ProductNotifier productNotifier =
+        Provider.of<ProductNotifier>(context, listen: false);
+    var isCartAdded = false;
     return Stack(
       children: <Widget>[
         InkWell(
@@ -432,7 +468,7 @@ class _SearchPageState extends State<SearchPage> {
             //Nav.route(context, ProductDetailPage());
           },
           child: Container(
-            width: ScreenUtil.getWidth(context) / 2,
+            width: ScreenUtil.getWidth(context),
             margin: EdgeInsets.only(left: 16, top: 8, right: 12, bottom: 12),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -456,8 +492,8 @@ class _SearchPageState extends State<SearchPage> {
                     child: Stack(
                       children: <Widget>[
                         Container(
-                            width: 300,
-                            height: 120,
+                            width: 150,
+                            height: 170,
                             child: ClipRRect(
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(8),
@@ -495,6 +531,125 @@ class _SearchPageState extends State<SearchPage> {
                               //   fit: BoxFit.cover,
                               // ),
                             )),
+                        Container(
+                          //color: Colors.white,
+                          padding: EdgeInsets.only(left: 150, top: 4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              AutoSizeText(
+                                product.name,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  color: Color(0xFF5D6A78),
+                                  fontWeight: FontWeight.w300,
+                                ),
+                                maxLines: 2,
+                                minFontSize: 11,
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Row(
+                                  // children: <Widget>[
+                                  //   RatingBar(
+                                  //     ignoreGestures: true,
+                                  //     initialRating: 3,
+                                  //     itemSize: 14.0,
+                                  //     minRating: 1,
+                                  //     direction: Axis.horizontal,
+                                  //     allowHalfRating: true,
+                                  //     itemCount: 5,
+                                  //     itemBuilder: (context, _) => Icon(
+                                  //       Ionicons.ios_star,
+                                  //       color: themeColor.getColor(),
+                                  //     ),
+                                  //     onRatingUpdate: (rating) {
+                                  //       print(rating);
+                                  //     },
+                                  //   ),
+                                  //   SizedBox(
+                                  //     width: 8,
+                                  //   ),
+                                  //   Text(
+                                  //     "(395)",
+                                  //     style: GoogleFonts.poppins(
+                                  //         fontSize: 9, fontWeight: FontWeight.w400),
+                                  //   )
+                                  // ],
+                                  ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      Text(
+                                        product.mrpPrice.toString(),
+                                        style: GoogleFonts.poppins(
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w300),
+                                      ),
+                                      Text(
+                                        product.price.toString(),
+                                        style: GoogleFonts.poppins(
+                                            color: themeColor.getColor(),
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w400),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      FindDropdown(
+                                        items: [
+                                          "1 kg",
+                                          "2 kg",
+                                        ],
+                                        onChanged: (String item) async {
+                                          // cart.quantity = int.parse(item);
+
+                                          // await saveCart(cart);
+                                          // //return ShoppingCartPage();
+                                          // LoaderDialog.showLoadingDialog(
+                                          //     context, _keyLoader, "Refreshing cart...");
+                                          // await gettotalCartAmount(
+                                          //     productNotifier, authNotifier);
+
+                                          // Navigator.of(_keyLoader.currentContext,
+                                          //         rootNavigator: true)
+                                          //     .pop();
+                                          //Nav.route(context, ShoppingCartPage());
+                                        },
+                                        selectedItem: "1 kg",
+                                        isUnderLine: false,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
                         Positioned(
                           top: 0,
                           right: 8,
@@ -516,84 +671,6 @@ class _SearchPageState extends State<SearchPage> {
                       ],
                     ),
                   ),
-                  Container(
-                    color: Colors.white,
-                    padding: EdgeInsets.only(left: 10, top: 4),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        AutoSizeText(
-                          product.name,
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: Color(0xFF5D6A78),
-                            fontWeight: FontWeight.w300,
-                          ),
-                          maxLines: 2,
-                          minFontSize: 11,
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Row(
-                            // children: <Widget>[
-                            //   RatingBar(
-                            //     ignoreGestures: true,
-                            //     initialRating: 3,
-                            //     itemSize: 14.0,
-                            //     minRating: 1,
-                            //     direction: Axis.horizontal,
-                            //     allowHalfRating: true,
-                            //     itemCount: 5,
-                            //     itemBuilder: (context, _) => Icon(
-                            //       Ionicons.ios_star,
-                            //       color: themeColor.getColor(),
-                            //     ),
-                            //     onRatingUpdate: (rating) {
-                            //       print(rating);
-                            //     },
-                            //   ),
-                            //   SizedBox(
-                            //     width: 8,
-                            //   ),
-                            //   Text(
-                            //     "(395)",
-                            //     style: GoogleFonts.poppins(
-                            //         fontSize: 9, fontWeight: FontWeight.w400),
-                            //   )
-                            // ],
-                            ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 4,
-                                ),
-                                Text(
-                                  product.mrpPrice.toString(),
-                                  style: GoogleFonts.poppins(
-                                      decoration: TextDecoration.lineThrough,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                                Text(
-                                  product.price.toString(),
-                                  style: GoogleFonts.poppins(
-                                      color: themeColor.getColor(),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400),
-                                )
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )
                 ],
               ),
             ),
@@ -609,48 +686,260 @@ class _SearchPageState extends State<SearchPage> {
               //     content: Text('Product added to cart')));
               //Nav.route(context, ShoppingCartPage());
             },
-            child: Container(
-              padding: EdgeInsets.only(top: 8, left: 8, bottom: 8, right: 8),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey[200],
-                        blurRadius: 5.0,
-                        spreadRadius: 1,
-                        offset: Offset(0.0, 1)),
-                  ]),
-              child: InkWell(
-                onTap: () async {
-                  cart = Cart();
-                  cart.uid = authNotifier.user.uid;
-                  cart.quantity = 1;
-                  cart.productId = product.id;
-                  cart.image = product.image;
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                // getCartButton(
+                //     productNotifier, authNotifier, product, isCartAdded),
+                Container(
+                  padding:
+                      EdgeInsets.only(top: 8, left: 8, bottom: 8, right: 8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey[200],
+                            blurRadius: 5.0,
+                            spreadRadius: 1,
+                            offset: Offset(0.0, 1)),
+                      ]),
+                  child: InkWell(
+                    onTap: () async {
+                      cart = Cart();
+                      cart.uid = authNotifier.user.uid;
+                      cart.quantity = 1;
+                      cart.productId = product.id;
+                      cart.image = product.image;
 
-                  await saveCartHandle(cart);
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text('Product added to cart'),
-                  ));
-                  //close the dialoge
-                },
-                child: Row(children: <Widget>[
-                  Text(
-                    "Add to Cart ",
+
+                      await saveCartHandle(cart);
+                      await gettotalCartAmount(productNotifier, authNotifier);
+                      setState(() {
+                        isCartAdded = true;
+                      });
+
+                      Navigator.of(_drawerKey.currentContext,
+                              rootNavigator: true)
+                          .pop();
+
+                      // Scaffold.of(context).showSnackBar(SnackBar(
+                      //   content: Container(
+                      //       margin: EdgeInsets.fromLTRB(0, 0, 0, 75),
+                      //       child: Text('Product added to cart')),
+                      // ));
+
+                      //close the dialoge
+                    },
+                    child: Row(children: <Widget>[
+                      Text(
+                        "ADD ",
+                      ),
+                      Container(
+                        child: SvgPicture.asset(
+                          "assets/icons/ic_product_shopping_cart.svg",
+                          height: 20,
+                        ),
+                      )
+                    ]),
                   ),
-                  Container(
-                    child: SvgPicture.asset(
-                      "assets/icons/ic_product_shopping_cart.svg",
-                      height: 20,
-                    ),
-                  )
-                ]),
-              ),
+                ),
+              ],
             ),
           ),
-        )
+        ),
       ],
+    );
+  }
+
+  Widget getCartButton(ProductNotifier productNotifier,
+      AuthNotifier authNotifier, Product product, bool isCartAdded) {
+    //bool isCartAdded = false;
+
+    if (isCartAdded) {
+      return Container(
+        padding: EdgeInsets.only(top: 8, left: 8, bottom: 8, right: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey[200],
+                  blurRadius: 5.0,
+                  spreadRadius: 1,
+                  offset: Offset(0.0, 1)),
+            ]),
+        child: InkWell(
+          onTap: () async {
+            cart = Cart();
+            // cart.uid = authNotifier.user.uid;
+            // cart.quantity = 1;
+            // cart.productId = product.id;
+            // cart.image = product.image;
+
+            // await saveCartHandle(cart);
+            // Scaffold.of(context).showSnackBar(SnackBar(
+            //   content: Text('Product added to cart'),
+            // ));
+            //close the dialoge
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              InkWell(
+                  onTap: () {
+                    setState(() {
+                      if (piece != 0) {
+                        piece--;
+                      }
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: Text(
+                      "-",
+                      style: TextStyle(fontSize: 24, color: Colors.red),
+                    ),
+                  )),
+              Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    color: Color(0xFF707070),
+                  ),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 40,
+                    height: 32,
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('$piece',
+                        style: GoogleFonts.poppins(
+                            color: Colors.white, fontSize: 14)),
+                  )),
+              InkWell(
+                  onTap: () {
+                    setState(() {
+                      if (piece != 99) {
+                        piece++;
+                      }
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text("+", style: TextStyle(color: Colors.red)),
+                  )),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        padding: EdgeInsets.only(top: 8, left: 8, bottom: 8, right: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey[200],
+                  blurRadius: 5.0,
+                  spreadRadius: 1,
+                  offset: Offset(0.0, 1)),
+            ]),
+        child: InkWell(
+          onTap: () async {
+            cart = Cart();
+            cart.uid = authNotifier.user.uid;
+            cart.quantity = 1;
+            cart.productId = product.id;
+            cart.image = product.image;
+
+            await saveCartHandle(cart);
+            await gettotalCartAmount(productNotifier, authNotifier);
+            setState(() {
+              isCartAdded = true;
+            });
+
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('Product added to cart'),
+            ));
+
+            //close the dialoge
+          },
+          child: Row(children: <Widget>[
+            Text(
+              "ADD ",
+            ),
+            Container(
+              child: SvgPicture.asset(
+                "assets/icons/ic_product_shopping_cart.svg",
+                height: 20,
+              ),
+            )
+          ]),
+        ),
+      );
+    }
+  }
+
+  Widget shoppingCartBottomSummary(ThemeNotifier themeColor) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(.3),
+              blurRadius: 9.0, // soften the shadow
+              spreadRadius: 0.0, //extend the shadow
+              offset: Offset(
+                0.0, // Move to right 10  horizontally
+                0.0, // Move to bottom 10 Vertically
+              ),
+            )
+          ]),
+      height: 75,
+      padding: EdgeInsets.all(16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "Total",
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.bold, color: themeColor.getColor()),
+              ),
+              Text(
+                //"3",
+                totalCartAmount != 0 ? totalCartAmount.toString() : "...",
+                style: GoogleFonts.poppins(color: themeColor.getColor()),
+              ),
+            ],
+          ),
+          GFButton(
+            color: themeColor.getColor(),
+            child: Text(
+              "My Cart",
+              style: GoogleFonts.poppins(color: whiteColor, fontSize: 10),
+            ),
+            onPressed: () {
+              
+              if (totalCartAmount != 0) {
+                Nav.route(context, ShoppingCartPage());
+              } else {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text('Please wait to update price.'),
+                ));
+              }
+            },
+            type: GFButtonType.solid,
+            shape: GFButtonShape.pills,
+          )
+        ],
+      ),
     );
   }
 }

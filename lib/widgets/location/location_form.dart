@@ -54,6 +54,7 @@ class _LocationFormState extends State<LocationForm> {
     ProductNotifier productNotifier =
         Provider.of<ProductNotifier>(context, listen: false);
     UserModel userInfo = UserModel();
+    model.location = productNotifier.currentLocationInfo;
     model.location != null ? model.location : "Nadapuram";
     return Container(
       padding: EdgeInsets.only(top: 24, right: 42, left: 42),
@@ -77,7 +78,7 @@ class _LocationFormState extends State<LocationForm> {
                 productNotifier.currentLocationInfo = value;
               },
               selectedItem: model.location,
-              isUnderLine: false,
+              isUnderLine: false, 
               backgroundColor: Color(0xFFEEEEF3),
               labelStyle: GoogleFonts.poppins(
                   fontSize: 50,
@@ -100,10 +101,17 @@ class _LocationFormState extends State<LocationForm> {
                     if (model.location != null) {
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
+                        LoaderDialog.showLoadingDialog(
+                            context, _formKey, "Saving your location...");
+                        _formKey.currentState.save();
+
                         await initializeCurrentUser(authNotifier);
                         productNotifier.currentLocationInfo = model.location;
-                        // await saveUserHandle(userInfo);
-                        Nav.routeReplacement(context, InitPage());
+                        Navigator.of(_formKey.currentContext,
+                                rootNavigator: true)
+                            .pop();
+                        Nav.routeReplacement(
+                            context, InitPage(location: model.location));
                       }
                     } else {}
                   },

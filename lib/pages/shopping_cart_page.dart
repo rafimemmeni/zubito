@@ -17,6 +17,7 @@ import 'package:shoppingapp/widgets/homepage/search_box.dart';
 import 'package:shoppingapp/widgets/shopping_cart/shopping_cart_item.dart';
 import 'package:shoppingapp/api/product_api.dart';
 
+import '../main.dart';
 import 'edit_user_info_page.dart';
 
 class ShoppingCartPage extends StatefulWidget {
@@ -45,7 +46,6 @@ class HomeWidgetState extends State<ShoppingCartPage>
 
   gettotalCartAmount(
       ProductNotifier productNotifier, AuthNotifier authNotifier) async {
-    
     totalCartAmount = 0;
 
     await getCarts(productNotifier, authNotifier.user.uid);
@@ -67,75 +67,112 @@ class HomeWidgetState extends State<ShoppingCartPage>
         Provider.of<ProductNotifier>(context, listen: false);
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-
-    return FutureBuilder<dynamic>(
-        future: gettotalCartAmount(productNotifier, authNotifier),
-        // ignore: missing_return
-        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-          // if (snapshot.connectionState == ConnectionState.waiting) {
-          //   return Stack(children: <Widget>[
-          //     Text(
-          //       "    Loading your cart...",
-          //       style: GoogleFonts.poppins(
-          //           fontWeight: FontWeight.w600,
-          //           fontSize: 12,
-          //           color: Color(0xFF5D6A78)),
-          //     )
-          //   ]);
-          // }
-          if (!snapshot.hasData) {
-            // LoaderDialog.showLoadingDialog(context, _keyLoader);
-            return Stack(children: <Widget>[
-              Text(
-                "    Loading your cart...",
-                style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                    color: Color(0xFF5D6A78)),
-              )
-            ]);
-          } else if (snapshot.hasData) {
-            //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-            return SafeArea(
-              child: Scaffold(
-                bottomSheet: shoppingCartBottomSummary(themeColor),
-                backgroundColor: whiteColor,
-                body: Stack(
-                  children: <Widget>[
-                    SingleChildScrollView(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+    return SafeArea(
+      child: WillPopScope(
+        onWillPop: () {
+          return Nav.routeReplacement(context, InitPage());
+        },
+        child: FutureBuilder<dynamic>(
+            future: gettotalCartAmount(productNotifier, authNotifier),
+            // ignore: missing_return
+            builder: (context, AsyncSnapshot<dynamic> snapshot) {
+              // if (snapshot.connectionState == ConnectionState.waiting) {
+              //   return Stack(children: <Widget>[
+              //     Text(
+              //       "    Loading your cart...",
+              //       style: GoogleFonts.poppins(
+              //           fontWeight: FontWeight.w600,
+              //           fontSize: 12,
+              //           color: Color(0xFF5D6A78)),
+              //     )
+              //   ]);
+              // }
+              if (!snapshot.hasData) {
+                // LoaderDialog.showLoadingDialog(context, _keyLoader);
+               return SafeArea(
+                  child: Scaffold(
+                    bottomSheet: shoppingCartBottomSummary(themeColor),
+                    backgroundColor: whiteColor,
+                    body: Stack(
                       children: <Widget>[
-                        SearchBox(),
-                        SizedBox(
-                          height: 26,
-                        ),
-                        shoppingCartInfo(productNotifier.cartByUserList.length),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        ListView(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
+                        SingleChildScrollView(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            for (var cart in productNotifier.cartByUserList)
-                              ShoppingCartItem(
-                                  themeColor: themeColor,
-                                  imageUrl: cart.image,
-                                  cart: cart)
+                            SearchBox(),
+                            SizedBox(
+                              height: 26,
+                            ),
+                            shoppingCartInfo(
+                                productNotifier.cartByUserList.length),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            ListView(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              children: <Widget>[
+                                for (var cart in productNotifier.cartByUserList)
+                                  ShoppingCartItem(
+                                      themeColor: themeColor,
+                                      imageUrl: cart.image,
+                                      cart: cart)
 
-                            //_product = await getProductById(productId);
-                            ,
+                                //_product = await getProductById(productId);
+                                ,
+                              ],
+                            )
                           ],
-                        )
+                        )),
                       ],
-                    )),
-                  ],
-                ),
-              ),
-            );
-          }
-        });
+                    ),
+                  ),
+                );
+              } else if (snapshot.hasData) {
+                //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                return SafeArea(
+                  child: Scaffold(
+                    bottomSheet: shoppingCartBottomSummary(themeColor),
+                    backgroundColor: whiteColor,
+                    body: Stack(
+                      children: <Widget>[
+                        SingleChildScrollView(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SearchBox(),
+                            SizedBox(
+                              height: 26,
+                            ),
+                            shoppingCartInfo(
+                                productNotifier.cartByUserList.length),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            ListView(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              children: <Widget>[
+                                for (var cart in productNotifier.cartByUserList)
+                                  ShoppingCartItem(
+                                      themeColor: themeColor,
+                                      imageUrl: cart.image,
+                                      cart: cart)
+
+                                //_product = await getProductById(productId);
+                                ,
+                              ],
+                            )
+                          ],
+                        )),
+                      ],
+                    ),
+                  ),
+                );
+              }
+            }),
+      ),
+    );
   }
 
   Widget shoppingCartInfo(int cartCount) {
@@ -206,7 +243,7 @@ class HomeWidgetState extends State<ShoppingCartPage>
           GFButton(
             color: themeColor.getColor(),
             child: Text(
-              "Confirm",
+              "Confirm & Order",
               style: GoogleFonts.poppins(color: whiteColor, fontSize: 10),
             ),
             onPressed: () {

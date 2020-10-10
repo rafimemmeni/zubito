@@ -59,7 +59,6 @@ class FindDropdown<T> extends StatefulWidget {
 
 class _FindDropdownState<T> extends State<FindDropdown<T>> {
   FindDropdownBloc<T> bloc;
-
   @override
   void initState() {
     super.initState();
@@ -154,7 +153,7 @@ class _FindDropdownState<T> extends State<FindDropdown<T>> {
                                     fontSize: widget.isUnderLine ? 12 : 20,
                                     fontWeight: widget.isUnderLine
                                         ? FontWeight.w400
-                                        : FontWeight.w500),
+                                        : FontWeight.w300),
                               ),
                               Align(
                                 alignment: Alignment.centerRight,
