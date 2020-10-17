@@ -4,6 +4,8 @@ class Cart {
   String id;
   String uid;
   String productId;
+  String unit;
+  int price;
   int quantity;
   String image;
   Timestamp createdAt;
@@ -17,6 +19,8 @@ class Cart {
       this.createdAt,
       this.updatedAt,
       this.quantity,
+      this.unit,
+      this.price,
       this.isDeleted,
       this.image});
 
@@ -27,6 +31,8 @@ class Cart {
     createdAt = data['createdAt'];
     updatedAt = data['updatedAt'];
     quantity = data['quantity'];
+    unit = data['unit'];
+    price = data['price'];
     isDeleted = data['isDeleted'];
     image = data['image'];
   }
@@ -39,6 +45,8 @@ class Cart {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'quantity': quantity,
+      'unit': unit,
+      'price': price,
       'isDeleted': isDeleted,
       'image': image
     };

@@ -4,6 +4,7 @@ class OrderItem {
   String id;
   String orderid;
   String name;
+  String unit;
   int quantity;
   int price;
   Timestamp createdAt;
@@ -13,6 +14,7 @@ class OrderItem {
     this.id,
     this.orderid,
     this.name,
+    this.unit,
     this.quantity,
     this.price,
     this.createdAt,
@@ -23,6 +25,7 @@ class OrderItem {
     id = data['id'];
     orderid = data['orderid'];
     name = data['name'];
+    unit = data['unit'];
     quantity = data['quantity'];
     price = data['price'];
     createdAt = data['createdAt'];
@@ -34,6 +37,7 @@ class OrderItem {
       'id': id,
       'orderid': orderid,
       'name': name,
+      'unit': unit,
       'quantity': quantity,
       'price': price,
       'createdAt': createdAt,

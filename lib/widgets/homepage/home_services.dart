@@ -13,15 +13,15 @@ import 'package:shoppingapp/utils/navigator.dart';
 
 import '../../config.dart';
 
-class CategoryListView extends StatelessWidget {
-  const CategoryListView({Key key}) : super(key: key);
+class HomeServices extends StatelessWidget {
+  const HomeServices({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     ProductNotifier productNotifier =
         Provider.of<ProductNotifier>(context, listen: false);
     return CategoriesListView(
-      title: "YOUR TITLES",
+      title: "Home Services",
       productNotifier: productNotifier,
       categories: [
         // 'ic_lamp.svg',
@@ -29,19 +29,28 @@ class CategoryListView extends StatelessWidget {
         //'ic_baby.svg',
         //'ic_headphone.svg'
         'ic_whatsapp.svg',
-        'ic_medical.svg',
-        'restaurant.svg',
-        'book.svg'
+        'ic_whatsapp.svg',
+        'ic_whatsapp.svg',
+        'ic_whatsapp.svg',
+        'ic_whatsapp.svg',
+        'ic_whatsapp.svg',
+        'ic_whatsapp.svg',
+        'ic_whatsapp.svg',
+        'ic_whatsapp.svg',
+        'taxi.svg'
       ],
       categoryTitle: [
         //'My Orders',
-        'Whatsapp Order',
-        '  Medicine',
-        '  Restaurant',
-        '   Books',
-        // 'Meat & Fish',
-        // 'Gourme',
-        // 'Beverages'
+        'Electric & Plumbing',
+        'Solar Instalation',
+        'CCTV Instalation',
+        'Mobile Punchering',
+        'AC Mechanic',
+        'Pickup',
+        'Car Service',
+        'Gypsum Plastering ',
+        'Home Nurse',
+        'Taxi'
       ],
     );
   }
@@ -81,8 +90,8 @@ class CategoriesListView extends StatelessWidget {
                 FlutterOpenWhatsapp.sendSingleMessage(
                     "918129196970", "Hi Zubito, I need to order a medicine.");
               } else {
-                Scaffold.of(context).showSnackBar(SnackBar(
-                    backgroundColor: mainColor, content: Text('Coming soon')));
+                FlutterOpenWhatsapp.sendSingleMessage(
+                    "918129196970", "Hi Zubito, I need " + categoryTitle[index]);
                 //Nav.route(context, OrdersDetailPage());
                 // Navigator.push(
                 //   context,

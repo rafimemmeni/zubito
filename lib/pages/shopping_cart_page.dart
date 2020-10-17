@@ -47,12 +47,22 @@ class HomeWidgetState extends State<ShoppingCartPage>
   gettotalCartAmount(
       ProductNotifier productNotifier, AuthNotifier authNotifier) async {
     totalCartAmount = 0;
-
+    //int totalCartAmountTemp = 0;
     await getCarts(productNotifier, authNotifier.user.uid);
     for (var cart in productNotifier.cartByUserList) {
-      final product = await getProductById(cart.productId);
-      totalCartAmount = totalCartAmount + (product.price * cart.quantity);
+      //final product = await getProductById(cart.productId);
+      //if (cart.unit == product.unit1) {
+      totalCartAmount = totalCartAmount + (cart.price * cart.quantity);
+      // } else if (cart.unit == product.unit2) {
+      //   totalCartAmountTemp =
+      //       totalCartAmountTemp + (product.price2 * cart.quantity);
+      // }
     }
+    //Navigator.of(_drawerKey.currentContext, rootNavigator: true).pop();
+    // setState(() {
+    // totalCartAmount = totalCartAmountTemp;
+    // });
+
     //authNotifier.totalCart = totalCartAmount;
     return totalCartAmount;
   }
@@ -89,7 +99,7 @@ class HomeWidgetState extends State<ShoppingCartPage>
               // }
               if (!snapshot.hasData) {
                 // LoaderDialog.showLoadingDialog(context, _keyLoader);
-               return SafeArea(
+                return SafeArea(
                   child: Scaffold(
                     bottomSheet: shoppingCartBottomSummary(themeColor),
                     backgroundColor: whiteColor,
@@ -116,12 +126,13 @@ class HomeWidgetState extends State<ShoppingCartPage>
                                   ShoppingCartItem(
                                       themeColor: themeColor,
                                       imageUrl: cart.image,
-                                      cart: cart)
-
+                                      cart: cart),
+                                SizedBox(
+                                  height: 50,
+                                ),
                                 //_product = await getProductById(productId);
-                                ,
                               ],
-                            )
+                            ),
                           ],
                         )),
                       ],
@@ -200,6 +211,44 @@ class HomeWidgetState extends State<ShoppingCartPage>
     );
   }
 
+  Widget getCartButtonState(ThemeNotifier themeColor) {
+    //bool isCartAdded = false;
+
+    if (totalCartAmount == -1 || totalCartAmount == 0) {
+      return Container(
+          child: GFButton(
+        color: themeColor.getColor(),
+        child: Text(
+          "Continue",
+          style: GoogleFonts.poppins(color: whiteColor, fontSize: 10),
+        ),
+        onPressed: null,
+        type: GFButtonType.solid,
+        shape: GFButtonShape.pills,
+      ));
+    } else {
+      return Container(
+          child: GFButton(
+        color: themeColor.getColor(),
+        child: Text(
+          "Continue",
+          style: GoogleFonts.poppins(color: whiteColor, fontSize: 10),
+        ),
+        onPressed: () {
+          if (totalCartAmount != 0) {
+            Nav.route(
+                context,
+                EditUserInfoPage(
+                    userSaveButtonCaption: "Confirm & Order",
+                    totalCartAmount: totalCartAmount));
+          }
+        },
+        type: GFButtonType.solid,
+        shape: GFButtonShape.pills,
+      ));
+    }
+  }
+
   Widget shoppingCartBottomSummary(ThemeNotifier themeColor) {
     final authNotifier = Provider.of<AuthNotifier>(context);
     //final String total = productNotifier.totalCart.toString();
@@ -235,27 +284,12 @@ class HomeWidgetState extends State<ShoppingCartPage>
               ),
               Text(
                 //"3",
-                totalCartAmount.toString(),
+                totalCartAmount != 0 ? totalCartAmount.toString() : "...",
                 style: GoogleFonts.poppins(color: themeColor.getColor()),
               ),
             ],
           ),
-          GFButton(
-            color: themeColor.getColor(),
-            child: Text(
-              "Confirm & Order",
-              style: GoogleFonts.poppins(color: whiteColor, fontSize: 10),
-            ),
-            onPressed: () {
-              Nav.route(
-                  context,
-                  EditUserInfoPage(
-                      userSaveButtonCaption: "Confirm & Order",
-                      totalCartAmount: totalCartAmount));
-            },
-            type: GFButtonType.solid,
-            shape: GFButtonShape.pills,
-          )
+          getCartButtonState(themeColor)
         ],
       ),
     );

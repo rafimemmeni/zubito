@@ -6,9 +6,13 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shoppingapp/api/product_api.dart';
 import 'package:shoppingapp/models/order.dart';
 import 'package:shoppingapp/models/orderItems.dart';
+import 'package:shoppingapp/notifier/auth_notifier.dart';
+import 'package:shoppingapp/notifier/product_notifier.dart';
 import 'package:shoppingapp/utils/commons/colors.dart';
+import 'package:shoppingapp/utils/commons/loaderdialog.dart';
 import 'package:shoppingapp/utils/screen.dart';
 import 'package:shoppingapp/utils/theme_notifier.dart';
 
@@ -18,11 +22,11 @@ class OrderItemList extends StatelessWidget {
 
   OrderItemList({Key key, this.imageUrl, ThemeNotifier themeColor, this.order})
       : super(key: key);
-
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
   @override
   Widget build(BuildContext context) {
     final themeColor = Provider.of<ThemeNotifier>(context);
-
+    final productNotifier = Provider.of<ProductNotifier>(context);
     return Container(
       margin: EdgeInsets.only(top: 8, left: 16, bottom: 8, right: 16),
       decoration: BoxDecoration(
@@ -90,7 +94,7 @@ class OrderItemList extends StatelessWidget {
                         height: 2,
                       ),
                       AutoSizeText(
-                        order.id,
+                        order.id.toUpperCase(),
                         style: GoogleFonts.poppins(
                           fontSize: 12,
                           color: Color(0xFF5D6A78),
@@ -180,7 +184,7 @@ class OrderItemList extends StatelessWidget {
                               child: Row(
                                 children: <Widget>[
                                   Text(
-                                    "Order Placed",
+                                    order.orderStatus,
                                     style: GoogleFonts.poppins(
                                         color: Color(0xFF5D6A78),
                                         fontSize: 10,
@@ -244,6 +248,15 @@ class OrderItemList extends StatelessWidget {
                           ],
                         ),
                       ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      getOrderButton(order),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      getDeliveryButton(
+                          order, _keyLoader, context, productNotifier)
                     ],
                   )
                 ],
@@ -301,7 +314,9 @@ class OrderItemList extends StatelessWidget {
                                           width:
                                               ScreenUtil.getWidth(context) / 4,
                                           child: Text(
-                                            orderItem.quantity.toString() +
+                                            orderItem.unit +
+                                                " - " +
+                                                orderItem.quantity.toString() +
                                                 " X " +
                                                 orderItem.price.toString(),
                                             softWrap: true,
@@ -325,6 +340,44 @@ class OrderItemList extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                Container(
+                                  //width: ScreenUtil.getWidth(context) / 4,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        width: ScreenUtil.getWidth(context) / 4,
+                                        child: Text(
+                                          "TOTAL",
+                                          softWrap: true,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w300,
+                                            color: Color(0xFF5D6A78),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: ScreenUtil.getWidth(context) / 4,
+                                        child: Text(
+                                          "-",
+                                          softWrap: true,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w300,
+                                            color: Color(0xFF5D6A78),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        order.totalPrice.toString(),
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.red,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w300),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             )
                             // Text(
@@ -366,6 +419,192 @@ class OrderItemList extends StatelessWidget {
           //       ),
           //       onPressed: () {},
           //     ))
+        ],
+      ),
+    );
+  }
+}
+
+getOrderButton(Order order) {
+  if (order.orderStatus != "Canceled" && order.orderStatus != "Delivered") {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          InkWell(
+            onTap: () {
+              if (order.orderStatus != "Canceled" ||
+                  order.orderStatus != "Delivered") {
+                order.orderStatus = "Canceled";
+                updateOrder(order);
+              }
+            },
+            child: Container(
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(3),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(.2),
+                      blurRadius: 6.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: Offset(
+                        0.0, // Move to right 10  horizontally
+                        1.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ]),
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    "Cancel",
+                    style: GoogleFonts.poppins(
+                        color: Color(0xFF5D6A78),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  Icon(
+                    FontAwesome5.window_close,
+                    size: 12,
+                    color: Colors.blue,
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  } else {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          InkWell(
+            onTap: () async {},
+            child: Container(
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(3),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(.2),
+                      blurRadius: 6.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: Offset(
+                        0.0, // Move to right 10  horizontally
+                        1.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ]),
+              child: Row(
+                children: <Widget>[],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+getDeliveryButton(Order order, GlobalKey<State> _keyLoader,
+    BuildContext context, ProductNotifier productNotifier) {
+  if (order.orderStatus != "Canceled" &&
+      order.orderStatus != "Delivered" //&&
+      //(productNotifier.currentUserInfo.role == "Admin" ||
+        //  productNotifier.currentUserInfo.role == "Delivery Boy"
+         // )
+          ) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          InkWell(
+            onTap: () async {
+              LoaderDialog.showLoadingDialog(
+                  context, _keyLoader, "Updating Order...");
+              if (order.orderStatus != "Canceled" ||
+                  order.orderStatus != "Delivered") {
+                order.orderStatus = "Delivered";
+                await updateOrder(order);
+                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                    .pop();
+              }
+            },
+            child: Container(
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(3),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(.2),
+                      blurRadius: 6.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: Offset(
+                        0.0, // Move to right 10  horizontally
+                        1.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ]),
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    "Deliver Order",
+                    style: GoogleFonts.poppins(
+                        color: Color(0xFF5D6A78),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  Icon(
+                    FontAwesome5.window_close,
+                    size: 12,
+                    color: Colors.blue,
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  } else {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          InkWell(
+            onTap: () async {},
+            child: Container(
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(3),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(.2),
+                      blurRadius: 6.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: Offset(
+                        0.0, // Move to right 10  horizontally
+                        1.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ]),
+              child: Row(
+                children: <Widget>[],
+              ),
+            ),
+          )
         ],
       ),
     );

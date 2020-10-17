@@ -49,8 +49,7 @@ class ShoppingCartItem extends StatelessWidget {
     int totalCartAmount = 0;
     await getCarts(productNotifier, authNotifier.user.uid);
     for (var cart in productNotifier.cartByUserList) {
-      final product = await getProductById(cart.productId);
-      totalCartAmount = totalCartAmount + (product.price * cart.quantity);
+        totalCartAmount = totalCartAmount + (cart.price * cart.quantity);      
     }
     authNotifier.totalCart = totalCartAmount;
   }
@@ -194,27 +193,10 @@ class ShoppingCartItem extends StatelessWidget {
                             ),
                             Row(
                               children: <Widget>[
-                                Text(
-                                  product != null
-                                      ? product.mrpPrice.toString()
-                                      : "",
-                                  style: GoogleFonts.poppins(
-                                      decoration: TextDecoration.lineThrough,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300),
-                                ),
                                 SizedBox(
-                                  width: 4,
+                                  width: 8,
                                 ),
-                                Text(
-                                  product != null
-                                      ? product.price.toString()
-                                      : "",
-                                  style: GoogleFonts.poppins(
-                                      color: themeColor.getColor(),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w300),
-                                ),
+                                getCartPrice(cart)
                               ],
                             ),
                             Text(
@@ -296,5 +278,55 @@ class ShoppingCartItem extends StatelessWidget {
             );
           }
         });
+  }
+
+  Widget getCartPrice(Cart cart) {
+    //bool isCartAdded = false;
+
+    if (cart.unit.toLowerCase() == "500g") {
+      return Row(
+        children: <Widget>[
+          Text(
+            product != null ? product.mrpPrice1.toString() : "",
+            style: GoogleFonts.poppins(
+                decoration: TextDecoration.lineThrough,
+                fontSize: 14,
+                fontWeight: FontWeight.w300),
+          ),
+          SizedBox(
+            width: 4,
+          ),
+          Text(
+            product != null ? product.price1.toString() : "",
+            style: GoogleFonts.poppins(
+                color: themeColor.getColor(),
+                fontSize: 18,
+                fontWeight: FontWeight.w300),
+          ),
+        ],
+      );
+    } else if (cart.unit.toLowerCase() == "1 kg") {
+      return Row(
+        children: <Widget>[
+          Text(
+            product != null ? product.mrpPrice2.toString() : "",
+            style: GoogleFonts.poppins(
+                decoration: TextDecoration.lineThrough,
+                fontSize: 14,
+                fontWeight: FontWeight.w300),
+          ),
+          SizedBox(
+            width: 4,
+          ),
+          Text(
+            product != null ? product.price2.toString() : "",
+            style: GoogleFonts.poppins(
+                color: themeColor.getColor(),
+                fontSize: 18,
+                fontWeight: FontWeight.w300),
+          ),
+        ],
+      );
+    }
   }
 }

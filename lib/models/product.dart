@@ -9,10 +9,12 @@ class Product {
   String section;
 
   String image;
-
-  int price;
-
-  int mrpPrice;
+  String unit1;
+  String unit2;
+  int price1;
+  int mrpPrice1;
+  int price2;
+  int mrpPrice2;
 
   bool isliked;
 
@@ -26,8 +28,12 @@ class Product {
       this.name,
       this.category,
       this.section,
-      this.price,
-      this.mrpPrice,
+      this.unit1,
+      this.unit2,
+      this.price1,
+      this.mrpPrice1,
+      this.price2,
+      this.mrpPrice2,
       this.isliked,
       this.isSelected = false,
       this.image});
@@ -38,8 +44,12 @@ class Product {
     category = data['category'];
     section = data['section'];
     image = data['image'];
-    price = data['price'];
-    mrpPrice = data['mrpPrice'];
+    unit1 = data['unit1'];
+    unit2 = data['unit2'];
+    price1 = data['price1'];
+    price2 = data['price2'];
+    mrpPrice1 = data['mrpPrice1'];
+    mrpPrice2 = data['mrpPrice2'];
     //createdAt = data['createdAt'];
     //updatedAt = data['updatedAt'];
   }
@@ -50,11 +60,12 @@ class Product {
       'name': name,
       'category': category,
       'image': image,
-      'price': price,
-
-      ///'createdAt': createdAt,
-      //'updatedAt': updatedAt,
-      'mrpPrice': mrpPrice
+      'unit1': unit1,
+      'unit2': unit2,
+      'price1': price1,
+      'price2': price2,
+      'mrpPrice1': mrpPrice1,
+      'mrpPrice2': mrpPrice2,
     };
   }
 }

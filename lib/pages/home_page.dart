@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/global.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shoppingapp/api/product_api.dart';
 import 'package:shoppingapp/notifier/product_notifier.dart';
@@ -11,6 +12,7 @@ import 'package:shoppingapp/utils/navigator.dart';
 import 'package:shoppingapp/utils/theme_notifier.dart';
 import 'package:shoppingapp/widgets/homepage/category_list_view.dart';
 import 'package:shoppingapp/widgets/homepage/discount_list.dart';
+import 'package:shoppingapp/widgets/homepage/home_services.dart';
 import 'package:shoppingapp/widgets/homepage/product_list.dart';
 import 'package:shoppingapp/widgets/homepage/product_list_titlebar.dart';
 import 'package:shoppingapp/widgets/homepage/search_box.dart';
@@ -27,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     ProductNotifier productNotifier =
         Provider.of<ProductNotifier>(context, listen: false);
-   // getProducts(productNotifier, "Bakery", "Offer");
+    // getProducts(productNotifier, "Bakery", "Offer");
     super.initState();
   }
 
@@ -48,7 +50,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Color.fromARGB(255, 252, 252, 252),
       body: ListView(
         children: <Widget>[
-         // SearchBox(),
+          // SearchBox(),
 //              FlatButton(
 //                onPressed: () {
 //                  _onActionSheetPress(context);
@@ -56,6 +58,18 @@ class _HomePageState extends State<HomePage> {
 //                child: Text(translate('button.change_language')),
 //              ),
           CategoryListView(),
+                    Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Text(
+              "Home Services",
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                color: Color(0xFF5D6A78),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          HomeServices(),
           InkWell(
             onTap: () {
               // Nav.route(context, ProductDetailPage());

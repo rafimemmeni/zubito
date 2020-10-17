@@ -190,7 +190,7 @@ getProducts(
     ProductNotifier productNotifier, String category, String section) async {
   if (section != "All") {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('Products')
+        .collection('Product')
         .where('section', isEqualTo: section)
         .orderBy("id", descending: false)
         .get();
@@ -207,7 +207,7 @@ getProducts(
     }
   } else {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('Products')
+        .collection('Product')
         .where('category', isEqualTo: category)
         .orderBy("id", descending: false)
         .get();
@@ -242,7 +242,7 @@ getOrderItemByOrderId(Order order) async {
 
 getProductById(String productId) async {
   QuerySnapshot snapshot = await FirebaseFirestore.instance
-      .collection('Products')
+      .collection('Product')
       .where('id', isEqualTo: productId)
       .orderBy("createdAt", descending: true)
       .get();
@@ -329,6 +329,20 @@ deleteCartById(String cartId) async {
   print("deleted cart: " + cartId);
 }
 
+updateOrder(Order order) async {
+  CollectionReference productRef =
+      FirebaseFirestore.instance.collection('Order');
+
+  if (order.id != null) {
+    order.updatedAt = Timestamp.now();
+    order.orderItems = null;
+    //order.
+    await productRef.doc(order.id).update(order.toMap());
+
+    print('updated order with id: ${order.id}');
+  }
+}
+
 saveCart(Cart cart) async {
   CollectionReference productRef =
       FirebaseFirestore.instance.collection('Cart');
@@ -411,7 +425,7 @@ saveUser(UserModel userModel) async {
 _uploadProduct(Product product, bool isUpdating, Function productUploaded,
     {String imageUrl}) async {
   CollectionReference productRef =
-      FirebaseFirestore.instance.collection('Products');
+      FirebaseFirestore.instance.collection('Product');
 
   if (imageUrl != null) {
     product.image = imageUrl;
@@ -452,7 +466,7 @@ deleteProduct(Product product, Function productDeleted) async {
   }
 
   await FirebaseFirestore.instance
-      .collection('Products')
+      .collection('Product')
       .doc(product.id)
       .delete();
   productDeleted(product);

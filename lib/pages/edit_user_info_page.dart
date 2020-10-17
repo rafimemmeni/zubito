@@ -191,6 +191,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                               height: 16,
                             ),
                             NewAddressInput(
+                                keyboardType: TextInputType.multiline,
                                 labelText: "Address",
                                 hintText: 'Enter Address here',
                                 isEmail: true,
@@ -206,6 +207,26 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                                 },
                                 value: userInfo.address != null
                                     ? userInfo.address
+                                    : ""),
+                            NewAddressInput(
+                                labelText: "Pin Code",
+                                hintText: 'xxxxxx',
+                                keyboardType: TextInputType.phone,
+                                validator: (String value) {
+                                  if (value.length < 1) {
+                                    return 'Please enter a valid Pin Code.';
+                                  }
+                                  if (value.length < 6 || value.length > 6) {
+                                    return 'Please enter a valid Pin code.';
+                                  }
+                                  _formKey.currentState.save();
+                                  return null;
+                                },
+                                onSaved: (String value) {
+                                  userInfo.pinCode = value;
+                                },
+                                value: userInfo.pinCode != null
+                                    ? userInfo.pinCode
                                     : ""),
                             Container(
                               height: 42,
@@ -224,7 +245,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                                     if (_formKey.currentState.validate()) {
                                       _formKey.currentState.save();
                                       userInfo.uid = authNotifier.user.uid;
-
+                                      userInfo.role = "Customer";
                                       await saveUserHandle(userInfo);
 
                                       if (userSaveButtonCaption != "Save") {
@@ -232,16 +253,18 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                                         order.uid = userInfo.uid;
 
                                         order.address = userInfo.address;
-                                        SharedPreferences.getInstance()
-                                            .then((prefs) async {
-                                          order.location = productNotifier
-                                              .currentLocationInfo;
+                                        order.location =
+                                            productNotifier.currentLocationInfo;
+                                        order.totalPrice = totalCartAmount;
+                                        await saveOrderHandle(
+                                            order, productNotifier);
+                                        // SharedPreferences.getInstance()
+                                        //     .then((prefs) async {
+                                        //   order.location = productNotifier
+                                        //       .currentLocationInfo;
 
-                                          order.totalPrice = totalCartAmount;
-                                          await saveOrderHandle(
-                                              order, productNotifier);
-                                          openAlertBox(context, themeColor);
-                                        });
+                                        openAlertBox(context, themeColor);
+                                        // });
                                       } else {
                                         Scaffold.of(context)
                                             .showSnackBar(SnackBar(
@@ -410,11 +433,10 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
 
   Future<void> saveUserHandle(UserModel userInfo) async {
     try {
-      LoaderDialog.showLoadingDialog(
-          context, _keyLoader, "Saving your profile..");
+      LoaderDialog.showLoadingDialog(context, _keyLoader, "Processing..");
       await saveUser(userInfo);
 
-      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+     // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     } catch (error) {
       print(error);
     }
@@ -424,13 +446,20 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
       Order order, ProductNotifier productNotifier) async {
     try {
       LoaderDialog.showLoadingDialog(
-          context, _keyLoader, "Ordering your prodcuts..");
+          context, _keyLoader, "Processing..");
 
       List<OrderItem> _orderItems = [];
       for (var cart in productNotifier.cartByUserList) {
         final product = await getProductById(cart.productId);
         OrderItem orderItem = OrderItem();
-        orderItem.price = product.price;
+        if (cart.unit == product.unit1) {
+          orderItem.price = product.price1;
+          orderItem.unit = product.unit1;
+        } else if (cart.unit == product.unit2) {
+          orderItem.price = product.price2;
+          orderItem.unit = product.unit2;
+        }
+
         orderItem.name = product.name;
         orderItem.quantity = cart.quantity;
         orderItem.createdAt = Timestamp.now();

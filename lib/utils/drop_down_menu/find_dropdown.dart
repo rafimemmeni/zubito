@@ -115,7 +115,7 @@ class _FindDropdownState<T> extends State<FindDropdown<T>> {
                   child: (widget.dropdownBuilder != null)
                       ? widget.dropdownBuilder(context, snapshot.data)
                       : Container(
-                          height: 45,
+                          height: 30,
                           decoration: widget.isUnderLine
                               ? BoxDecoration(
                                   border: Border(
