@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -10,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingapp/api/product_api.dart';
+import 'package:shoppingapp/models/userModel.dart';
 import 'package:shoppingapp/pages/category_page.dart';
 import 'package:shoppingapp/pages/edit_user_info_page.dart';
 import 'package:shoppingapp/pages/favorite_products_page.dart';
@@ -118,8 +121,50 @@ class InitPage extends StatefulWidget {
 class _InitPageState extends State<InitPage> {
   List<ScreenHiddenDrawer> items = new List();
 
+  Future _getUser;
+
+  getUser(AuthNotifier authNotifier, ProductNotifier productNotifier) async {
+    await initializeCurrentUser(authNotifier);
+    await getUserInfo(productNotifier, authNotifier.user);
+    UserModel userInfo = UserModel();
+    if (productNotifier.currentUserInfo != null) {
+      userInfo = productNotifier.currentUserInfo;
+    }
+    // setState(() {
+    if (userInfo.role == "Admin" ||
+        userInfo.role == "Delivery" ||
+        userInfo.role == "SuperAdmin") {
+      items.add(new ScreenHiddenDrawer(
+          new ItemHiddenMenu(
+            icon: Icon(
+              Feather.truck,
+              size: 19,
+              color: Colors.white,
+            ),
+            name: 'Manage Order',
+            baseStyle: GoogleFonts.poppins(
+                color: Colors.white.withOpacity(0.6), fontSize: 19.0),
+            colorLineSelected: Colors.orange,
+          ),
+          CustomerOrdersDetailPage()));
+    }
+    //});
+    return userInfo;
+  }
+
   @override
   void initState() {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    initializeCurrentUser(authNotifier);
+
+    ProductNotifier productNotifier =
+        Provider.of<ProductNotifier>(context, listen: false);
+    _getUser = getUser(authNotifier, productNotifier);
+    super.initState();
+
+    setState(() {});
+
     var icon2 = Icon(
       Feather.home,
       size: 19,
@@ -134,20 +179,6 @@ class _InitPageState extends State<InitPage> {
           colorLineSelected: Colors.transparent,
         ),
         HomeNavigator()));
-
-    // items.add(new ScreenHiddenDrawer(
-    //     new ItemHiddenMenu(
-    //       icon: Icon(
-    //         Feather.search,
-    //         color: Colors.white,
-    //         size: 19,
-    //       ),
-    //       name: 'Categories',
-    //       baseStyle: GoogleFonts.poppins(
-    //           color: Colors.white.withOpacity(0.6), fontSize: 19.0),
-    //       colorLineSelected: Colors.orange,
-    //     ),
-    //     CategoryPage()));
     items.add(new ScreenHiddenDrawer(
         new ItemHiddenMenu(
           icon: Icon(
@@ -174,19 +205,6 @@ class _InitPageState extends State<InitPage> {
           colorLineSelected: Colors.orange,
         ),
         OrdersDetailPage()));
-    items.add(new ScreenHiddenDrawer(
-        new ItemHiddenMenu(
-          icon: Icon(
-            Feather.truck,
-            size: 19,
-            color: Colors.white,
-          ),
-          name: 'Manage Order',
-          baseStyle: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.6), fontSize: 19.0),
-          colorLineSelected: Colors.orange,
-        ),
-        CustomerOrdersDetailPage()));
 
     items.add(new ScreenHiddenDrawer(
         new ItemHiddenMenu(
@@ -203,6 +221,10 @@ class _InitPageState extends State<InitPage> {
         EditUserInfoPage(userSaveButtonCaption: "Save")));
 
     super.initState();
+    // If we need to rebuild the widget with the resulting data,
+    // make sure to use `setState`
+
+    // _result = result;
   }
 
   @override
@@ -210,8 +232,12 @@ class _InitPageState extends State<InitPage> {
     final themeColor = Provider.of<ThemeNotifier>(context);
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
+
     ProductNotifier productNotifier =
         Provider.of<ProductNotifier>(context, listen: false);
+
+    //getUser(authNotifier, productNotifier);
+
     if (widget.location != null) {
       productNotifier.currentLocationInfo = widget.location;
     }
@@ -220,81 +246,164 @@ class _InitPageState extends State<InitPage> {
     //   if (prefs.getInt('location') != null) {
     //   }
     // });
-    initializeCurrentUser(authNotifier);
-    return HiddenDrawerMenu(
-      iconMenuAppBar: Padding(
-        padding: EdgeInsets.only(bottom: 6),
-        child: SvgPicture.asset(
-          "assets/icons/ic_menu.svg",
-          height: 20,
-          color: themeColor.getColor(),
-        ),
-      ),
-      isTitleCentered: true,
-      elevationAppBar: 0.0,
-      backgroundColorAppBar: Color.fromARGB(255, 252, 252, 252),
-      tittleAppBar: Padding(
-        child: Image.asset(
-          "assets/icons/titlebar_icon.png",
-          height: 20,
-          //color: themeColor.getColor(),
-        ),
-        // child: IconButton(
-        //   icon: Icon(
-        //     Icons.location_on,
-        //     color: themeColor.getColor(),
-        //     size: 20,
-        //   ),
-        // child: Text(
-        //   "Zubito",
-        //   style: GoogleFonts.poppins(
-        //     fontSize: 26,
-        //     color: themeColor.getColor(),
-        //     fontWeight: FontWeight.w600,
-        //   ),
-        //),
-        padding: EdgeInsets.all(1.0),
-      ),
-      actionsAppBar: <Widget>[
-        Padding(
-          child: InkWell(
-            onTap: () {
-              Nav.route(context, LocationPage());
-            },
-            child: Text(
-              productNotifier.currentLocationInfo != null
-                  ? productNotifier.currentLocationInfo
-                  : " ",
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Colors.red,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          padding: EdgeInsets.all(8.0),
-        ),
-        // Padding(
-        //   //width: 32,
-        //   padding: EdgeInsets.all(1),
-        //   child: IconButton(
-        //     icon: Icon(
-        //       Icons.location_on,
-        //       color: themeColor.getColor(),
-        //       size: 20,
-        //     ),
-        //     onPressed: () {
-        //       Nav.route(context, LocationPage());
-        //     },
-        //   ),
-        // ),
-      ],
-      backgroundColorMenu: Colors.blueGrey,
-      screens: items,
-      enableScaleAnimin: true,
-      slidePercent: 70.0,
-      verticalScalePercent: 90.0,
-      contentCornerRadius: 16.0,
+    return SafeArea(
+      child: WillPopScope(
+          onWillPop: () {
+            if (productNotifier.currentPageIndex != 0) {
+              productNotifier.currentPageIndex = 0;
+              return Nav.routeReplacement(context, InitPage());
+            } else {
+              exit(0);
+            }
+          },
+          child: FutureBuilder<dynamic>(
+              future: _getUser,
+              //gettotalCartAmount(productNotifier, authNotifier),
+              // ignore: missing_return
+              builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                // if (snapshot.connectionState == ConnectionState.waiting) {
+                //   return Stack(children: <Widget>[
+                //     Text(
+                //       "    Loading your cart...",
+                //       style: GoogleFonts.poppins(
+                //           fontWeight: FontWeight.w600,
+                //           fontSize: 12,
+                //           color: Color(0xFF5D6A78)),
+                //     )
+                //   ]);
+                // }
+                if (!snapshot.hasData) {
+                  return HiddenDrawerMenu(
+                    iconMenuAppBar: Padding(
+                      padding: EdgeInsets.only(bottom: 6),
+                      child: SvgPicture.asset(
+                        "assets/icons/ic_menu.svg",
+                        height: 20,
+                        color: themeColor.getColor(),
+                      ),
+                    ),
+                    isTitleCentered: true,
+                    elevationAppBar: 0.0,
+                    backgroundColorAppBar: Color.fromARGB(255, 252, 252, 252),
+                    tittleAppBar: Padding(
+                      child: Image.asset(
+                        "assets/icons/titlebar_icon.png",
+                        height: 20,
+                        //color: themeColor.getColor(),
+                      ),
+                      padding: EdgeInsets.all(1.0),
+                    ),
+                    actionsAppBar: <Widget>[
+                      Padding(
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey[200],
+                                        blurRadius: 1.0,
+                                        spreadRadius: 1,
+                                        offset: Offset(0.0, 1)),
+                                  ],
+                                  color: Color(0xFFf77605),
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: InkWell(
+                                onTap: () {
+                                  Nav.route(context, LocationPage());
+                                },
+                                child: Text(
+                                  productNotifier.currentLocationInfo != null
+                                      ? productNotifier.currentLocationInfo
+                                      : " ",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              padding: EdgeInsets.all(8.0),
+                            ),
+                          ],
+                        ),
+                        padding: EdgeInsets.all(8.0),
+                      ),
+                    ],
+                    backgroundColorMenu: Colors.blueGrey,
+                    screens: items,
+                    enableScaleAnimin: true,
+                    slidePercent: 70.0,
+                    verticalScalePercent: 90.0,
+                    contentCornerRadius: 16.0,
+                  );
+                } else {
+                  return HiddenDrawerMenu(
+                    iconMenuAppBar: Padding(
+                      padding: EdgeInsets.only(bottom: 6),
+                      child: SvgPicture.asset(
+                        "assets/icons/ic_menu.svg",
+                        height: 20,
+                        color: Color(0xFFf77605),
+                      ),
+                    ),
+                    isTitleCentered: true,
+                    elevationAppBar: 0.0,
+                    backgroundColorAppBar: Color.fromARGB(255, 252, 252, 252),
+                    tittleAppBar: Padding(
+                      child: Image.asset(
+                        "assets/icons/titlebar_icon.png",
+                        height: 20,
+                        color: themeColor.getColor(),
+                      ),
+                      padding: EdgeInsets.all(1.0),
+                    ),
+                    actionsAppBar: <Widget>[
+                      Padding(
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey[200],
+                                        blurRadius: 0,
+                                        spreadRadius: 0,
+                                        offset: Offset(0.0, 1)),
+                                  ],
+                                  color: Color(0xFFf77605),
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: InkWell(
+                                onTap: () {
+                                  Nav.route(context, LocationPage());
+                                },
+                                child: Text(
+                                  productNotifier.currentLocationInfo != null
+                                      ? productNotifier.currentLocationInfo
+                                      : " ",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              padding: EdgeInsets.all(8.0),
+                            ),
+                          ],
+                        ),
+                        padding: EdgeInsets.all(8.0),
+                      ),
+                    ],
+                    backgroundColorMenu: Colors.blueGrey,
+                    screens: items,
+                    enableScaleAnimin: true,
+                    slidePercent: 70.0,
+                    verticalScalePercent: 90.0,
+                    contentCornerRadius: 16.0,
+                  );
+                }
+              })),
     );
   }
 }

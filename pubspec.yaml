@@ -1,6 +1,6 @@
 name: shoppingapp
 description: Shopping App
-version: 1.0.16+16
+version: 1.0.25+25
 
 environment:
   sdk: ">=2.2.2 <3.0.0"

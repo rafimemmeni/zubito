@@ -24,24 +24,19 @@ class CategoryListView extends StatelessWidget {
       title: "YOUR TITLES",
       productNotifier: productNotifier,
       categories: [
-        // 'ic_lamp.svg',
-        // 'ic_couch.svg',
-        //'ic_baby.svg',
-        //'ic_headphone.svg'
         'ic_whatsapp.svg',
         'ic_medical.svg',
         'restaurant.svg',
-        'book.svg'
+        'book.svg',
+        'taxi.svg'
       ],
       categoryTitle: [
         //'My Orders',
-        'Whatsapp Order',
-        '  Medicine',
-        '  Restaurant',
-        '   Books',
-        // 'Meat & Fish',
-        // 'Gourme',
-        // 'Beverages'
+        'Whatsapp Direct Order',
+        'Medicine',
+        'Restaurant',
+        'Books',
+        'Taxi',
       ],
     );
   }
@@ -64,8 +59,8 @@ class CategoriesListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 14, left: 4),
-      height: 95,
+      margin: EdgeInsets.only(top: 2, left: 4),
+      height: 108,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
@@ -98,15 +93,15 @@ class CategoriesListView extends StatelessWidget {
               children: <Widget>[
                 Container(
                   width: 55,
-                  height: 63,
+                  height: 55,
                   margin:
-                      EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 8),
+                      EdgeInsets.only(top: 4, bottom: 1, left: 12, right: 8),
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey[200],
-                          blurRadius: 5.0,
+                          //blurRadius: 5.0,
                           spreadRadius: 1,
                           offset: Offset(0.0, 1)),
                     ],
@@ -115,7 +110,7 @@ class CategoriesListView extends StatelessWidget {
                   ),
                   child: Container(
                     width: 50,
-                    height: 50,
+                    height: 40,
                     padding: EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -129,14 +124,20 @@ class CategoriesListView extends StatelessWidget {
                 SizedBox(
                   height: 4,
                 ),
-                Text(
-                  categoryTitle[index],
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: textColor,
-                    fontWeight: FontWeight.w400,
+                Container(
+                  width: 75,
+                  height: 40,
+                  child: Text(
+                    categoryTitle[index],
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 5,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                          color: textColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400),
                   ),
-                )
+                ),
               ],
             ),
           );

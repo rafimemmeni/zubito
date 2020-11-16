@@ -5,8 +5,10 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shoppingapp/pages/home_page_sub.dart';
 import 'package:shoppingapp/pages/product_detail.dart';
 import 'package:shoppingapp/pages/shopping_cart_page.dart';
+import 'package:shoppingapp/pages/sub._category.dart';
 import 'package:shoppingapp/utils/navigator.dart';
 import 'package:shoppingapp/utils/screen.dart';
 import 'package:shoppingapp/utils/theme_notifier.dart';
@@ -54,7 +56,11 @@ class ProductCard extends StatelessWidget {
             splashColor: Colors.green,
             hoverColor: Colors.red,
             onTap: () {
-              Nav.route(context, SearchPage(categoryName: categoryName));
+              if (categoryName == "Rice & others") {
+                Nav.route(context, HomePageSub());
+              } else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                Nav.route(context, SearchPage(categoryName: categoryName));
+              }
             },
             child: Container(
               width: (ScreenUtil.getWidth(context) - 6) / 3,
@@ -65,7 +71,7 @@ class ProductCard extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
+                    color: Color(0xFF07128A),
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey[200],

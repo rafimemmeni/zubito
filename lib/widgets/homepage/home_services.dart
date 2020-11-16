@@ -24,20 +24,15 @@ class HomeServices extends StatelessWidget {
       title: "Home Services",
       productNotifier: productNotifier,
       categories: [
-        // 'ic_lamp.svg',
-        // 'ic_couch.svg',
-        //'ic_baby.svg',
-        //'ic_headphone.svg'
-        'ic_whatsapp.svg',
-        'ic_whatsapp.svg',
-        'ic_whatsapp.svg',
-        'ic_whatsapp.svg',
-        'ic_whatsapp.svg',
-        'ic_whatsapp.svg',
-        'ic_whatsapp.svg',
-        'ic_whatsapp.svg',
-        'ic_whatsapp.svg',
-        'taxi.svg'
+        'plumbing.svg',
+        'solar-panel.svg',
+        'cctv.svg',
+        'car-suspension.svg',
+        'air-conditioner.svg',
+        'pickup-truck.svg',
+        'car_service.svg',
+        'home-repair.svg',
+        'nurse.svg',
       ],
       categoryTitle: [
         //'My Orders',
@@ -48,9 +43,8 @@ class HomeServices extends StatelessWidget {
         'AC Mechanic',
         'Pickup',
         'Car Service',
-        'Gypsum Plastering ',
+        'Gypsum   Plastering ',
         'Home Nurse',
-        'Taxi'
       ],
     );
   }
@@ -73,8 +67,8 @@ class CategoriesListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 14, left: 4),
-      height: 95,
+      margin: EdgeInsets.only(top: 1, left: 4),
+      height: 125,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
@@ -90,8 +84,8 @@ class CategoriesListView extends StatelessWidget {
                 FlutterOpenWhatsapp.sendSingleMessage(
                     "918129196970", "Hi Zubito, I need to order a medicine.");
               } else {
-                FlutterOpenWhatsapp.sendSingleMessage(
-                    "918129196970", "Hi Zubito, I need " + categoryTitle[index]);
+                FlutterOpenWhatsapp.sendSingleMessage("918129196970",
+                    "Hi Zubito, I need " + categoryTitle[index]);
                 //Nav.route(context, OrdersDetailPage());
                 // Navigator.push(
                 //   context,
@@ -109,13 +103,13 @@ class CategoriesListView extends StatelessWidget {
                   width: 55,
                   height: 63,
                   margin:
-                      EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 8),
+                      EdgeInsets.only(top: 1, bottom: 4, left: 12, right: 8),
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey[200],
-                          blurRadius: 5.0,
+                          //blurRadius: 5.0,
                           spreadRadius: 1,
                           offset: Offset(0.0, 1)),
                     ],
@@ -138,14 +132,26 @@ class CategoriesListView extends StatelessWidget {
                 SizedBox(
                   height: 4,
                 ),
-                Text(
-                  categoryTitle[index],
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: textColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                )
+                Container(
+                  width: 75,
+                  height: 50,
+                  child: Text(categoryTitle[index],
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 5,
+                      style: GoogleFonts.poppins(
+                          color: textColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400)),
+                ),
+                // Text(
+                //   categoryTitle[index],
+                //   style: GoogleFonts.poppins(
+                //     fontSize: 12,
+                //     color: textColor,
+                //     fontWeight: FontWeight.w400,
+                //   ),
+                // )
               ],
             ),
           );

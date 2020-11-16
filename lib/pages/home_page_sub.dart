@@ -18,13 +18,14 @@ import 'package:shoppingapp/widgets/homepage/product_list.dart';
 import 'package:shoppingapp/widgets/homepage/product_list_titlebar.dart';
 import 'package:shoppingapp/widgets/homepage/search_box.dart';
 import 'package:shoppingapp/widgets/homepage/slider_dot.dart';
+import 'package:shoppingapp/widgets/homepage/sub_category_list.dart';
 
-class HomePage extends StatefulWidget {
+class HomePageSub extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageSubState createState() => _HomePageSubState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageSubState extends State<HomePageSub> {
   int _carouselCurrentPage = 0;
   @override
   void initState() {
@@ -51,20 +52,22 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Color(0xFF07128A),
       body: ListView(
         children: <Widget>[
-          // SearchBox(),
-//              FlatButton(
-//                onPressed: () {
-//                  _onActionSheetPress(context);
-//                },
-//                child: Text(translate('button.change_language')),
-//              ),
+          
+          SizedBox(
+            height: 20,
+          ),
+          SubCategoryList(
+            themeColor: themeColor,
+            productListTitleBar: ProductListTitleBar(
+              themeColor: themeColor,
+              title: "Rice & Others",
+              isCountShow: false,
+            ),
+            productNotifier: productNotifier,
+          ),
           SizedBox(
             height: 8,
           ),
-          CategoryListView(),
-
-          HomeServices(),
-
           InkWell(
             onTap: () {
               // Nav.route(context, ProductDetailPage());
@@ -84,54 +87,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           SliderDot(current: _carouselCurrentPage),
-
-          DiscountList(
-            themeColor: themeColor,
-            productListTitleBar: ProductListTitleBar(
-              themeColor: themeColor,
-              title: "Restaurants",
-              isCountShow: true,
-            ),
-          ),
-
-          SizedBox(
-            height: 8,
-          ),
-
-          ProductList(
-            themeColor: themeColor,
-            productListTitleBar: ProductListTitleBar(
-              themeColor: themeColor,
-              title: "Categories",
-              isCountShow: false,
-            ),
-            productNotifier: productNotifier,
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          InkWell(
-            onTap: () {
-              // Nav.route(context, ProductDetailPage());
-            },
-            child: CarouselSlider(
-              items: imageSlidersTwo,
-              options: CarouselOptions(
-                  autoPlay: true,
-                  height: 175,
-                  viewportFraction: 1.0,
-                  enlargeCenterPage: false,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      _carouselCurrentPage = index;
-                    });
-                  }),
-            ),
-          ),
-          SliderDot(current: _carouselCurrentPage),
-          SizedBox(
-            height: 8,
-          ),
           SizedBox(
             height: 8,
           ),

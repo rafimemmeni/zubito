@@ -49,7 +49,7 @@ class ShoppingCartItem extends StatelessWidget {
     int totalCartAmount = 0;
     await getCarts(productNotifier, authNotifier.user.uid);
     for (var cart in productNotifier.cartByUserList) {
-        totalCartAmount = totalCartAmount + (cart.price * cart.quantity);      
+      totalCartAmount = totalCartAmount + (cart.price * cart.quantity);
     }
     authNotifier.totalCart = totalCartAmount;
   }
@@ -200,10 +200,10 @@ class ShoppingCartItem extends StatelessWidget {
                               ],
                             ),
                             Text(
-                              "Free Delivery",
+                              cart.unit,
                               style: GoogleFonts.poppins(
-                                  color: themeColor.getColor(),
-                                  fontSize: 10,
+                                  color: Colors.green,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w300),
                             ),
                           ],

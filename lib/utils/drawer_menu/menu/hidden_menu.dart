@@ -17,6 +17,7 @@ import 'package:shoppingapp/utils/navigator.dart';
 import 'package:shoppingapp/utils/screen.dart';
 import 'package:shoppingapp/utils/theme_notifier.dart';
 
+import '../../../main.dart';
 import '../../theme_change.dart';
 import 'item_hidden_menu.dart';
 import 'item_hidden_menu_right.dart';
@@ -105,6 +106,12 @@ class _HiddenMenuState extends State<HiddenMenu> {
 
     return Scaffold(
       body: Container(
+       child: InkWell(
+            onTap: () {
+               Nav.route(context, InitPage());
+            },
+
+      child: Container(
         height: ScreenUtil.getHeight(context),
         decoration: BoxDecoration(
           color: themeColor.getColor(),
@@ -346,6 +353,8 @@ class _HiddenMenuState extends State<HiddenMenu> {
               ),
             ],
           ),
+        ),
+        ),
         ),
       ),
     );

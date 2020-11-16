@@ -15,7 +15,6 @@ import 'package:shoppingapp/api/product_api.dart';
 
 import '../main.dart';
 
-
 class OrdersDetailPage extends StatefulWidget {
   @override
   _OrdersDetailPageState createState() => _OrdersDetailPageState();
@@ -80,10 +79,15 @@ class _OrdersDetailPageState extends State<OrdersDetailPage> {
                             style: GoogleFonts.poppins(
                                 color: Color(0xFF5D6A78), fontSize: 15),
                           ),
-                          leading: Icon(
-                            Icons.chevron_left,
-                            color: textColor,
-                            size: 32,
+                          leading: IconButton(
+                            icon: Icon(
+                              Icons.chevron_left,
+                              color: themeColor.getColor(),
+                              size: 32,
+                            ),
+                            onPressed: () {
+                              return Nav.routeReplacement(context, InitPage());
+                            },
                           ),
                         ),
                       ),

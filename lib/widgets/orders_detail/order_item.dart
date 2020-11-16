@@ -16,12 +16,28 @@ import 'package:shoppingapp/utils/commons/loaderdialog.dart';
 import 'package:shoppingapp/utils/screen.dart';
 import 'package:shoppingapp/utils/theme_notifier.dart';
 
-class OrderItemList extends StatelessWidget {
+class OrderItemList extends StatefulWidget {
   final String imageUrl;
   final Order order;
 
   OrderItemList({Key key, this.imageUrl, ThemeNotifier themeColor, this.order})
       : super(key: key);
+
+  @override
+  _OrderItemListState createState() => _OrderItemListState();
+}
+
+class _OrderItemListState extends State<OrderItemList> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   @override
   Widget build(BuildContext context) {
@@ -51,7 +67,7 @@ class OrderItemList extends StatelessWidget {
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.asset(
-                          "assets/images/$imageUrl",
+                          "assets/images/$widget.imageUrl",
                           fit: BoxFit.cover,
                         )),
                     width: 160,
@@ -94,7 +110,7 @@ class OrderItemList extends StatelessWidget {
                         height: 2,
                       ),
                       AutoSizeText(
-                        order.id.toUpperCase(),
+                        widget.order.id.toUpperCase(),
                         style: GoogleFonts.poppins(
                           fontSize: 12,
                           color: Color(0xFF5D6A78),
@@ -120,7 +136,7 @@ class OrderItemList extends StatelessWidget {
                       Container(
                         width: 150,
                         child: Text(
-                          order.address,
+                          widget.order.address,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 5,
                         ),
@@ -142,7 +158,7 @@ class OrderItemList extends StatelessWidget {
                       Container(
                         width: 150,
                         child: Text(
-                          order.location,
+                          widget.order.location,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 5,
                         ),
@@ -150,7 +166,7 @@ class OrderItemList extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(
-                            order.totalPrice.toString(),
+                            widget.order.totalPrice.toString(),
                             style: GoogleFonts.poppins(
                                 color: Colors.red,
                                 fontSize: 18,
@@ -184,7 +200,7 @@ class OrderItemList extends StatelessWidget {
                               child: Row(
                                 children: <Widget>[
                                   Text(
-                                    order.orderStatus,
+                                    widget.order.orderStatus,
                                     style: GoogleFonts.poppins(
                                         color: Color(0xFF5D6A78),
                                         fontSize: 10,
@@ -224,25 +240,6 @@ class OrderItemList extends StatelessWidget {
                                         ),
                                       )
                                     ]),
-                                // child: RatingBar(
-                                //   initialRating: 3,
-                                //   itemSize: 14.0,
-                                //   minRating: 1,
-                                //   direction: Axis.horizontal,
-                                //   allowHalfRating: true,
-                                //   itemCount: 5,
-                                //   itemBuilder: (context, _) => Container(
-                                //     height: 12,
-                                //     child: SvgPicture.asset(
-                                //       "assets/icons/ic_star.svg",
-                                //       color: Colors.red,
-                                //       width: 9,
-                                //     ),
-                                //   ),
-                                //   onRatingUpdate: (rating) {
-                                //     print(rating);
-                                //   },
-                                // ),
                               ),
                             )
                           ],
@@ -251,12 +248,12 @@ class OrderItemList extends StatelessWidget {
                       SizedBox(
                         height: 8,
                       ),
-                      getOrderButton(order),
+                      getOrderButton(widget.order, _keyLoader, context),
                       SizedBox(
                         height: 8,
                       ),
                       getDeliveryButton(
-                          order, _keyLoader, context, productNotifier)
+                          widget.order, _keyLoader, context, productNotifier)
                     ],
                   )
                 ],
@@ -292,7 +289,7 @@ class OrderItemList extends StatelessWidget {
                           children: <Widget>[
                             Column(
                               children: <Widget>[
-                                for (var orderItem in order.orderItems)
+                                for (var orderItem in widget.order.orderItems)
                                   Container(
                                     //width: ScreenUtil.getWidth(context) / 4,
                                     child: Row(
@@ -347,6 +344,44 @@ class OrderItemList extends StatelessWidget {
                                       Container(
                                         width: ScreenUtil.getWidth(context) / 4,
                                         child: Text(
+                                          "Delivery charge",
+                                          softWrap: true,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w300,
+                                            color: Color(0xFF5D6A78),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: ScreenUtil.getWidth(context) / 4,
+                                        child: Text(
+                                          "-",
+                                          softWrap: true,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w300,
+                                            color: Color(0xFF5D6A78),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        widget.order.deliveryCharge.toString(),
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.blue,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w200),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  //width: ScreenUtil.getWidth(context) / 4,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        width: ScreenUtil.getWidth(context) / 4,
+                                        child: Text(
                                           "TOTAL",
                                           softWrap: true,
                                           style: GoogleFonts.poppins(
@@ -369,7 +404,7 @@ class OrderItemList extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        order.totalPrice.toString(),
+                                        widget.order.totalPrice.toString(),
                                         style: GoogleFonts.poppins(
                                             color: Colors.red,
                                             fontSize: 18,
@@ -380,24 +415,6 @@ class OrderItemList extends StatelessWidget {
                                 ),
                               ],
                             )
-                            // Text(
-                            //   "1",
-                            //   softWrap: true,
-                            //   style: GoogleFonts.poppins(
-                            //     fontSize: 12,
-                            //     fontWeight: FontWeight.w300,
-                            //     color: Color(0xFF5D6A78),
-                            //   ),
-                            // ),
-                            // Text(
-                            //   "\$450",
-                            //   softWrap: true,
-                            //   style: GoogleFonts.poppins(
-                            //     fontSize: 12,
-                            //     fontWeight: FontWeight.w300,
-                            //     color: Color(0xFF5D6A78),
-                            //   ),
-                            // )
                           ],
                         ),
                         Divider(),
@@ -423,114 +440,126 @@ class OrderItemList extends StatelessWidget {
       ),
     );
   }
-}
 
-getOrderButton(Order order) {
-  if (order.orderStatus != "Canceled" && order.orderStatus != "Delivered") {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          InkWell(
-            onTap: () {
-              if (order.orderStatus != "Canceled" ||
-                  order.orderStatus != "Delivered") {
-                order.orderStatus = "Canceled";
-                updateOrder(order);
-              }
-            },
-            child: Container(
-              padding: EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(3),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(.2),
-                      blurRadius: 6.0, // soften the shadow
-                      spreadRadius: 0.0, //extend the shadow
-                      offset: Offset(
-                        0.0, // Move to right 10  horizontally
-                        1.0, // Move to bottom 10 Vertically
-                      ),
+  getOrderButton(
+      Order order, GlobalKey<State> _keyLoader, BuildContext context) {
+    if (order.orderStatus != "Canceled" && order.orderStatus != "Delivered") {
+      return Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            InkWell(
+              onTap: () async {
+                if (order.orderStatus != "Canceled" ||
+                    order.orderStatus != "Delivered") {
+                  LoaderDialog.showLoadingDialog(
+                      context, _keyLoader, "Cancelling Order...");
+                  order.orderStatus = "Canceled";
+                  await updateOrder(order);
+                  
+                  setState(() {
+                    //order.orderStatus = "Canceled";
+                    Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                      .pop();
+                  });
+                }
+              },
+              child: Container(
+                padding: EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(.2),
+                        blurRadius: 6.0, // soften the shadow
+                        spreadRadius: 0.0, //extend the shadow
+                        offset: Offset(
+                          0.0, // Move to right 10  horizontally
+                          1.0, // Move to bottom 10 Vertically
+                        ),
+                      )
+                    ]),
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      "Cancel",
+                      style: GoogleFonts.poppins(
+                          color: Color(0xFF5D6A78),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Icon(
+                      FontAwesome5.window_close,
+                      size: 12,
+                      color: Colors.blue,
                     )
-                  ]),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    "Cancel",
-                    style: GoogleFonts.poppins(
-                        color: Color(0xFF5D6A78),
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  SizedBox(
-                    width: 4,
-                  ),
-                  Icon(
-                    FontAwesome5.window_close,
-                    size: 12,
-                    color: Colors.blue,
-                  )
-                ],
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
-      ),
-    );
-  } else {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          InkWell(
-            onTap: () async {},
-            child: Container(
-              padding: EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(3),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(.2),
-                      blurRadius: 6.0, // soften the shadow
-                      spreadRadius: 0.0, //extend the shadow
-                      offset: Offset(
-                        0.0, // Move to right 10  horizontally
-                        1.0, // Move to bottom 10 Vertically
-                      ),
-                    )
-                  ]),
-              child: Row(
-                children: <Widget>[],
+            )
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            InkWell(
+              onTap: () async {},
+              child: Container(
+                padding: EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(.2),
+                        blurRadius: 6.0, // soften the shadow
+                        spreadRadius: 0.0, //extend the shadow
+                        offset: Offset(
+                          0.0, // Move to right 10  horizontally
+                          1.0, // Move to bottom 10 Vertically
+                        ),
+                      )
+                    ]),
+                child: Row(
+                  children: <Widget>[],
+                ),
               ),
-            ),
-          )
-        ],
-      ),
-    );
+            )
+          ],
+        ),
+      );
+    }
   }
 }
 
 getDeliveryButton(Order order, GlobalKey<State> _keyLoader,
     BuildContext context, ProductNotifier productNotifier) {
-  if (order.orderStatus != "Canceled" &&
-      order.orderStatus != "Delivered" //&&
+  if ((productNotifier.currentUserInfo.role == "Admin" ||
+              productNotifier.currentUserInfo.role == "Delivery" ||
+              productNotifier.currentUserInfo.role == "SuperAdmin") &&
+          order.orderStatus != "Canceled" &&
+          order.orderStatus != "Delivered" //&&
       //(productNotifier.currentUserInfo.role == "Admin" ||
-        //  productNotifier.currentUserInfo.role == "Delivery Boy"
-         // )
-          ) {
+      //  productNotifier.currentUserInfo.role == "Delivery Boy"
+      // )
+      ) {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           InkWell(
             onTap: () async {
-              LoaderDialog.showLoadingDialog(
-                  context, _keyLoader, "Updating Order...");
               if (order.orderStatus != "Canceled" ||
                   order.orderStatus != "Delivered") {
+                LoaderDialog.showLoadingDialog(
+                    context, _keyLoader, "Updating Order...");
                 order.orderStatus = "Delivered";
                 await updateOrder(order);
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
@@ -556,7 +585,7 @@ getDeliveryButton(Order order, GlobalKey<State> _keyLoader,
               child: Row(
                 children: <Widget>[
                   Text(
-                    "Deliver Order",
+                    "Mark as Delivered",
                     style: GoogleFonts.poppins(
                         color: Color(0xFF5D6A78),
                         fontSize: 10,
@@ -566,7 +595,7 @@ getDeliveryButton(Order order, GlobalKey<State> _keyLoader,
                     width: 4,
                   ),
                   Icon(
-                    FontAwesome5.window_close,
+                    FontAwesome5.arrow_alt_circle_right,
                     size: 12,
                     color: Colors.blue,
                   )

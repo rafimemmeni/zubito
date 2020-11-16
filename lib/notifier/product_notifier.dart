@@ -19,6 +19,7 @@ class ProductNotifier with ChangeNotifier {
   Product _currentProduct;
   String _selectedCategory;
   int _totalCart;
+  int _currentPageIndex;
   UnmodifiableListView<Product> get productList =>
       UnmodifiableListView(_productList);
 
@@ -40,6 +41,12 @@ class ProductNotifier with ChangeNotifier {
   Product get currentProduct => _currentProduct;
   String get currentCategory => _selectedCategory;
   int get totalCart => _totalCart;
+  int get currentPageIndex => _currentPageIndex;
+
+ set currentPageIndex(int currentPageIndex) {
+    _currentPageIndex = currentPageIndex;
+    notifyListeners();
+  }
 
   set totalCart(int totalCart) {
     _totalCart = totalCart;

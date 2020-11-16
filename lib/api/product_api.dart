@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:shoppingapp/models/delivery.dart';
 import 'package:shoppingapp/models/product.dart';
 import 'package:shoppingapp/models/cart.dart';
 import 'package:shoppingapp/models/order.dart';
@@ -73,11 +74,34 @@ initializeCurrentUser(AuthNotifier authNotifier) async {
   User firebaseUser = await FirebaseAuth.instance.currentUser;
 
   if (firebaseUser != null) {
-    print(firebaseUser);
     authNotifier.setUser(firebaseUser);
   } else {
     await loginAnon(authNotifier);
   }
+}
+
+getCartsByUserCount(ProductNotifier productNotifier, String uid) async {
+  QuerySnapshot snapshot = await FirebaseFirestore.instance
+      .collection('Cart')
+      .where('uid', isEqualTo: uid)
+      .orderBy("id", descending: false)
+      .get();
+  productNotifier.totalCart = snapshot.docs.length;
+  return productNotifier.totalCart;
+}
+
+getDeliveryCharge(String location) async {
+  QuerySnapshot snapshot = await FirebaseFirestore.instance
+      .collection('delivery')
+      .where('location', isEqualTo: location)
+      .orderBy("id", descending: false)
+      .get();
+  String deliveryCharge;
+  snapshot.docs.forEach((document) {
+    Delivery delivery = Delivery.fromMap(document.data());
+    deliveryCharge = delivery.charge;
+  });
+  return deliveryCharge;
 }
 
 getCarts(ProductNotifier productNotifier, String uid) async {
@@ -217,7 +241,7 @@ getProducts(
     snapshot.docs.forEach((document) {
       Product product = Product.fromMap(document.data());
       _productByCategoryList.add(product);
-      print('category:' + category);
+      //print('category:' + category);
       productNotifier.productByCategoryList = _productByCategoryList;
     });
   }
@@ -335,9 +359,15 @@ updateOrder(Order order) async {
 
   if (order.id != null) {
     order.updatedAt = Timestamp.now();
-    order.orderItems = null;
+    List<OrderItem> orderItems = order.orderItems;
+    order.orderItems = [];
     //order.
     await productRef.doc(order.id).update(order.toMap());
+
+    order.orderItems = orderItems;
+    // for (var orderItem in orderItems) {
+    //   order.orderItems.add(orderItem);
+    // }
 
     print('updated order with id: ${order.id}');
   }

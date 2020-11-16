@@ -7,6 +7,7 @@ class Order {
   String uid;
   int quantity;
   String location;
+  String deliveryCharge;
   String address;
   String orderStatus;
   Timestamp createdAt;
@@ -18,6 +19,7 @@ class Order {
       {this.id,
       this.uid,
       this.location,
+      this.deliveryCharge,
       this.orderStatus,
       this.createdAt,
       this.updatedAt,
@@ -30,6 +32,7 @@ class Order {
     id = data['id'];
     uid = data['uid'];
     location = data['location'];
+    deliveryCharge = data['deliveryCharge'];
     orderStatus = data['orderStatus'];
     createdAt = data['createdAt'];
     updatedAt = data['updatedAt'];
@@ -44,6 +47,7 @@ class Order {
       'id': id,
       'uid': uid,
       'location': location,
+      'deliveryCharge': deliveryCharge,
       'orderStatus': orderStatus,
       'createdAt': createdAt,
       'updatedAt': updatedAt,

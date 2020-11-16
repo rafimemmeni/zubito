@@ -4,8 +4,8 @@ import 'package:shoppingapp/widgets/commons/product_card.dart';
 import 'package:shoppingapp/widgets/homepage/product_list_titlebar.dart';
 import 'package:shoppingapp/notifier/product_notifier.dart';
 
-class ProductList extends StatelessWidget {
-  const ProductList(
+class SubCategoryList extends StatelessWidget {
+  const SubCategoryList(
       {Key key,
       @required this.themeColor,
       this.productListTitleBar,
@@ -25,24 +25,23 @@ class ProductList extends StatelessWidget {
           productListTitleBar,
           Container(
               height: 100.0,
-              color: Color(0xFF07128A),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
                   ProductCard(
                     themeColor: themeColor,
-                    imageUrl: "fruits.png",
-                    categoryName: "Fruits",
+                    imageUrl: "rice.png",
+                    categoryName: "Rice",
                     productNotifier: productNotifier,
                   ),
                   ProductCard(
                       themeColor: themeColor,
-                      imageUrl: "veg.png",
-                      categoryName: "Vegitables"),
+                      imageUrl: "cookingoil.png",
+                      categoryName: "Cooking Oils"),
                   ProductCard(
                     themeColor: themeColor,
-                    imageUrl: "meatFish.png",
-                    categoryName: "Chicken & Egg",
+                    imageUrl: "ricepowder.png",
+                    categoryName: "Rice Powder",
                   ),
                 ],
               )),
@@ -53,18 +52,18 @@ class ProductList extends StatelessWidget {
                 children: <Widget>[
                   ProductCard(
                     themeColor: themeColor,
-                    imageUrl: "foodgrains.png",
-                    categoryName: "Rice & others",
+                    imageUrl: "spices.png",
+                    categoryName: "Spices",
                     productNotifier: productNotifier,
                   ),
                   ProductCard(
                       themeColor: themeColor,
-                      imageUrl: "beverages.png",
-                      categoryName: "Beverages"),
+                      imageUrl: "spicepowder.png",
+                      categoryName: "Spice Powder"),
                   ProductCard(
                     themeColor: themeColor,
-                    imageUrl: "caketools.png",
-                    categoryName: "Cake tools",
+                    imageUrl: "dryfruits.png",
+                    categoryName: "Dry Frtuits",
                   ),
                 ],
               )),
@@ -75,18 +74,18 @@ class ProductList extends StatelessWidget {
                 children: <Widget>[
                   ProductCard(
                     themeColor: themeColor,
-                    imageUrl: "babykids.png",
-                    categoryName: "Baby & kids",
+                    imageUrl: "tea.png",
+                    categoryName: "Tea",
                     productNotifier: productNotifier,
                   ),
                   ProductCard(
                       themeColor: themeColor,
-                      imageUrl: "beauty.png",
-                      categoryName: "Personal Care"),
+                      imageUrl: "nutritiondrink.png",
+                      categoryName: "Nutrition Drink"),
                   ProductCard(
                     themeColor: themeColor,
-                    imageUrl: "cleaning.png",
-                    categoryName: "Cleaning",
+                    imageUrl: "pulses.png",
+                    categoryName: "Pulses",
                   ),
                 ],
               )),

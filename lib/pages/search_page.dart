@@ -71,6 +71,7 @@ class _SearchPageState extends State<SearchPage> {
       ProductNotifier productNotifier, AuthNotifier authNotifier) async {
     totalCartAmount = -1;
     int totalCartAmountTemp = 0;
+    productNotifier.productByCategoryList = [];
     await getProducts(productNotifier, widget.categoryName, "All");
     await getCarts(productNotifier, authNotifier.user.uid);
 
@@ -116,14 +117,14 @@ class _SearchPageState extends State<SearchPage> {
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.dark));
     List<String> prodcutListType = [
-      'Bestsellers',
-      'Favourites',
-      'The best',
-      'The most recent',
-      'Bestsellers',
-      'Favourites',
-      'The best',
-      'The most recent',
+      // 'Bestsellers',
+      // 'Favourites',
+      // 'The best',
+      // 'The most recent',
+      // 'Bestsellers',
+      // 'Favourites',
+      // 'The best',
+      // 'The most recent',
     ];
 
     return SafeArea(
@@ -204,7 +205,7 @@ class _SearchPageState extends State<SearchPage> {
                                           key: _formKey,
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: "Brand Search",
+                                              hintText: "Search",
                                               hintStyle: GoogleFonts.poppins(
                                                 fontSize: 13,
                                                 color: Color(0xFF5D6A78),
@@ -295,6 +296,59 @@ class _SearchPageState extends State<SearchPage> {
                               ],
                             ),
                           ),
+                          // Container(
+                          //   margin: EdgeInsets.only(top: 18, left: 16),
+                          //   height: 42,
+                          //   child: ListView.builder(
+                          //     scrollDirection: Axis.horizontal,
+                          //     itemCount: prodcutListType.length,
+                          //     itemBuilder: (BuildContext context, int index) {
+                          //       return GestureDetector(
+                          //         onTap: () {},
+                          //         child: Container(
+                          //           margin:
+                          //               EdgeInsets.only(right: 8, bottom: 8),
+                          //           padding:
+                          //               EdgeInsets.only(left: 12, right: 12),
+                          //           decoration: BoxDecoration(
+                          //             boxShadow: [
+                          //               BoxShadow(
+                          //                   color: Colors.grey[200],
+                          //                   blurRadius: 8.0,
+                          //                   spreadRadius: 1,
+                          //                   offset: Offset(0.0, 3))
+                          //             ],
+                          //             color:
+                          //                 Theme.of(context).bottomAppBarColor,
+                          //             borderRadius: BorderRadius.circular(24),
+                          //           ),
+                          //           child: Align(
+                          //               alignment: Alignment.center,
+                          //               child: Text(
+                          //                 prodcutListType[index],
+                          //                 style: GoogleFonts.poppins(
+                          //                     fontSize: 13,
+                          //                     color: Color(0xFF5D6A78)),
+                          //               )),
+                          //         ),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
+                          GridView.count(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            crossAxisCount: 1,
+                            childAspectRatio: 3.0,
+                            children: <Widget>[
+                              for (var product
+                                  in productNotifier.productByCategoryList)
+                                ProductItemWidget(
+                                    product: product, parent: this)
+                              // productSearchItem(
+                              //     context, themeColor, product, _drawerKey)
+                            ],
+                          ),
                           Container(
                             margin: EdgeInsets.only(top: 18, left: 16),
                             height: 42,
@@ -334,23 +388,6 @@ class _SearchPageState extends State<SearchPage> {
                               },
                             ),
                           ),
-                          SizedBox(
-                            height: 32,
-                          ),
-                          GridView.count(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            crossAxisCount: 1,
-                            childAspectRatio: 3.0,
-                            children: <Widget>[
-                              for (var product
-                                  in productNotifier.productByCategoryList)
-                                ProductItemWidget(
-                                    product: product, parent: this)
-                              // productSearchItem(
-                              //     context, themeColor, product, _drawerKey)
-                            ],
-                          )
                         ],
                       ),
                     ),
@@ -413,7 +450,7 @@ class _SearchPageState extends State<SearchPage> {
                                           key: _formKey,
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: "Brand Search",
+                                              hintText: "Search",
                                               hintStyle: GoogleFonts.poppins(
                                                 fontSize: 13,
                                                 color: Color(0xFF5D6A78),
@@ -504,9 +541,23 @@ class _SearchPageState extends State<SearchPage> {
                               ],
                             ),
                           ),
+                          GridView.count(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            crossAxisCount: 1,
+                            childAspectRatio: 3.0,
+                            children: <Widget>[
+                              for (var product
+                                  in productNotifier.productByCategoryList)
+                                ProductItemWidget(
+                                    product: product, parent: this)
+                              // productSearchItem(
+                              //     context, themeColor, product, _drawerKey)
+                            ],
+                          ),
                           Container(
                             margin: EdgeInsets.only(top: 18, left: 16),
-                            height: 42,
+                            height: 50,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: prodcutListType.length,
@@ -542,24 +593,7 @@ class _SearchPageState extends State<SearchPage> {
                                 );
                               },
                             ),
-                          ),
-                          SizedBox(
-                            height: 32,
-                          ),
-                          GridView.count(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            crossAxisCount: 1,
-                            childAspectRatio: 3.0,
-                            children: <Widget>[
-                              for (var product
-                                  in productNotifier.productByCategoryList)
-                                ProductItemWidget(
-                                    product: product, parent: this)
-                              // productSearchItem(
-                              //     context, themeColor, product, _drawerKey)
-                            ],
-                          )
+                          ),                          
                         ],
                       ),
                     ),
@@ -788,6 +822,7 @@ class _SearchPageState extends State<SearchPage> {
 
             await saveCartHandle(cart);
             await gettotalCartAmount(productNotifier, authNotifier);
+            await getCartsByUserCount(productNotifier, authNotifier.user.uid);
             setState(() {
               isCartAdded = true;
             });
@@ -1210,7 +1245,9 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                                                 productNotifier,
                                                 authNotifier,
                                                 widget.parent);
-
+                                            await getCartsByUserCount(
+                                                productNotifier,
+                                                authNotifier.user.uid);
                                             // Navigator.of(
                                             //         _drawerKey.currentContext,
                                             //         rootNavigator: true)

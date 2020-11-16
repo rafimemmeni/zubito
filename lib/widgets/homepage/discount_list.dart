@@ -35,78 +35,40 @@ class DiscountList extends StatelessWidget {
         children: <Widget>[
           productListTitleBar,
           Container(
-              height: 170.0,
+              height: 160.0,
+              //width: 10.0,
               child: new ListView(
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
                   //:Load discount list
-
                   // for (var product in productNotifier.offerProductList)
                   RestaurantItem(
                       themeColor: themeColor,
                       imageUrl: "mra.png",
-                      name: "",
-                      price: 'MRA Bakery',
+                      name: "MRA Bakery",
+                      price: '',
+                      mrpPrice: ''),
+
+                  RestaurantItem(
+                      themeColor: themeColor,
+                      imageUrl: "mra.png",
+                      name: "MRA Bakery",
+                      price: '',
                       mrpPrice: ''),
                   RestaurantItem(
                       themeColor: themeColor,
-                      imageUrl: "chicking.png",
-                      name: "",
-                      price: 'Chicking',
-                      mrpPrice: '')
-
-                  //});
-
-                  // DiscountItem(
-                  //themeColor: themeColor, imageUrl: "prodcut1.png")
-                  // DiscountItem(
-                  //     themeColor: themeColor, imageUrl: "prodcut2.png"),
-                  // DiscountItem(
-                  //     themeColor: themeColor, imageUrl: "prodcut3.png"),
+                      imageUrl: "mra.png",
+                      name: "MRA Bakery",
+                      price: '',
+                      mrpPrice: ''),
+                  RestaurantItem(
+                      themeColor: themeColor,
+                      imageUrl: "mra.png",
+                      name: "MRA Bakery",
+                      price: '',
+                      mrpPrice: ''),
                 ],
-              )
-              // child: ListView.separated(
-              //   itemBuilder: (BuildContext context, int index) {
-              //     return ListTile(
-              //       leading: Image.network(
-              //         productNotifier.productList[index].image != null
-              //             ? productNotifier.productList[index].image
-              //             : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
-              //         width: 120,
-              //         fit: BoxFit.fitWidth,
-              //       ),
-              //       title: Text(productNotifier.productList[index].name),
-              //       subtitle: Text(productNotifier.productList[index].category),
-              //       onTap: () {
-              //         productNotifier.currentFood =
-              //             productNotifier.productList[index];
-              //         Navigator.of(context).push(
-              //             MaterialPageRoute(builder: (BuildContext context) {
-              //           //return FoodDetail();
-              //         }));
-              //       },
-              //     );
-              //   },
-              //   itemCount: productNotifier.productList.length,
-              //   separatorBuilder: (BuildContext context, int index) {
-              //     return Divider(
-              //       color: Colors.black,
-              //     );
-              //   },
-              // ),
-
-              //  child: new ListView(
-              //   scrollDirection: Axis.horizontal,
-              //   children: <Widget>[
-              //     DiscountItem(
-              //         themeColor: themeColor, imageUrl: "prodcut1.png"),
-              //     DiscountItem(
-              //         themeColor: themeColor, imageUrl: "prodcut2.png"),
-              //     DiscountItem(
-              //         themeColor: themeColor, imageUrl: "prodcut3.png"),
-              //   ],
-              // )
-              ),
+              )),
         ],
       ),
     );

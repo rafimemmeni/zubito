@@ -34,6 +34,7 @@ class HomeWidgetState extends State<ShoppingCartPage>
   Product _product;
   int total = 0;
   int totalCartAmount = 0;
+  String deliveryCharge = "0";
   @override
   void initState() {
     super.initState();
@@ -47,23 +48,16 @@ class HomeWidgetState extends State<ShoppingCartPage>
   gettotalCartAmount(
       ProductNotifier productNotifier, AuthNotifier authNotifier) async {
     totalCartAmount = 0;
-    //int totalCartAmountTemp = 0;
     await getCarts(productNotifier, authNotifier.user.uid);
     for (var cart in productNotifier.cartByUserList) {
-      //final product = await getProductById(cart.productId);
-      //if (cart.unit == product.unit1) {
       totalCartAmount = totalCartAmount + (cart.price * cart.quantity);
-      // } else if (cart.unit == product.unit2) {
-      //   totalCartAmountTemp =
-      //       totalCartAmountTemp + (product.price2 * cart.quantity);
-      // }
     }
-    //Navigator.of(_drawerKey.currentContext, rootNavigator: true).pop();
-    // setState(() {
-    // totalCartAmount = totalCartAmountTemp;
-    // });
+    deliveryCharge =
+        await getDeliveryCharge(productNotifier.currentLocationInfo);
+    if (totalCartAmount > 0) {
+      totalCartAmount = totalCartAmount + int.parse(deliveryCharge);
+    }
 
-    //authNotifier.totalCart = totalCartAmount;
     return totalCartAmount;
   }
 
@@ -73,6 +67,7 @@ class HomeWidgetState extends State<ShoppingCartPage>
     setState(() => context = context);
 
     final themeColor = Provider.of<ThemeNotifier>(context);
+
     ProductNotifier productNotifier =
         Provider.of<ProductNotifier>(context, listen: false);
     AuthNotifier authNotifier =
@@ -101,7 +96,46 @@ class HomeWidgetState extends State<ShoppingCartPage>
                 // LoaderDialog.showLoadingDialog(context, _keyLoader);
                 return SafeArea(
                   child: Scaffold(
-                    bottomSheet: shoppingCartBottomSummary(themeColor),
+                    bottomSheet:
+                        shoppingCartBottomSummary(themeColor, deliveryCharge),
+                    backgroundColor: whiteColor,
+                    body: Stack(
+                      children: <Widget>[
+                        SingleChildScrollView(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SearchBox(),
+                            SizedBox(
+                              height: 26,
+                            ),
+                            // shoppingCartInfo(
+                            //     productNotifier.cartByUserList.length),
+                            // ListView(
+                            //   physics: NeverScrollableScrollPhysics(),
+                            //   shrinkWrap: true,
+                            //   children: <Widget>[
+                            //     for (var cart in productNotifier.cartByUserList)
+                            //       ShoppingCartItem(
+                            //           themeColor: themeColor,
+                            //           imageUrl: cart.image,
+                            //           cart: cart),
+
+                            //     //_product = await getProductById(productId);
+                            //   ],
+                            // ),
+                          ],
+                        )),
+                      ],
+                    ),
+                  ),
+                );
+              } else if (snapshot.hasData) {
+                //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                return SafeArea(
+                  child: Scaffold(
+                    bottomSheet:
+                        shoppingCartBottomSummary(themeColor, deliveryCharge),
                     backgroundColor: whiteColor,
                     body: Stack(
                       children: <Widget>[
@@ -127,53 +161,11 @@ class HomeWidgetState extends State<ShoppingCartPage>
                                       themeColor: themeColor,
                                       imageUrl: cart.image,
                                       cart: cart),
-                                SizedBox(
-                                  height: 50,
-                                ),
-                                //_product = await getProductById(productId);
                               ],
                             ),
-                          ],
-                        )),
-                      ],
-                    ),
-                  ),
-                );
-              } else if (snapshot.hasData) {
-                //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                return SafeArea(
-                  child: Scaffold(
-                    bottomSheet: shoppingCartBottomSummary(themeColor),
-                    backgroundColor: whiteColor,
-                    body: Stack(
-                      children: <Widget>[
-                        SingleChildScrollView(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SearchBox(),
                             SizedBox(
-                              height: 26,
+                              height: 75,
                             ),
-                            shoppingCartInfo(
-                                productNotifier.cartByUserList.length),
-                            SizedBox(
-                              height: 12,
-                            ),
-                            ListView(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              children: <Widget>[
-                                for (var cart in productNotifier.cartByUserList)
-                                  ShoppingCartItem(
-                                      themeColor: themeColor,
-                                      imageUrl: cart.image,
-                                      cart: cart)
-
-                                //_product = await getProductById(productId);
-                                ,
-                              ],
-                            )
                           ],
                         )),
                       ],
@@ -249,9 +241,12 @@ class HomeWidgetState extends State<ShoppingCartPage>
     }
   }
 
-  Widget shoppingCartBottomSummary(ThemeNotifier themeColor) {
+  Widget shoppingCartBottomSummary(
+      ThemeNotifier themeColor, String deliveryCharge) {
+    deliveryCharge = deliveryCharge != null ? deliveryCharge : "0";
     final authNotifier = Provider.of<AuthNotifier>(context);
-    //final String total = productNotifier.totalCart.toString();
+    final String total =
+        totalCartAmount.toString() != "0" ? totalCartAmount.toString() : "...";
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -278,14 +273,14 @@ class HomeWidgetState extends State<ShoppingCartPage>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                "Total",
+                "Delivery charge: " + deliveryCharge,
                 style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.bold, color: themeColor.getColor()),
+                    fontWeight: FontWeight.w400, color: Colors.green),
               ),
               Text(
-                //"3",
-                totalCartAmount != 0 ? totalCartAmount.toString() : "...",
-                style: GoogleFonts.poppins(color: themeColor.getColor()),
+                "Total: " + total.toString(),
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.bold, color: themeColor.getColor()),
               ),
             ],
           ),

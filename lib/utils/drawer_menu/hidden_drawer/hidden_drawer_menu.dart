@@ -176,7 +176,7 @@ class HiddenDrawerMenu extends StatelessWidget {
     return HiddenMenu(
       itens: _itensMenu,
       background: backgroundMenu,
-      backgroundColorMenu: backgroundColorMenu,
+      //backgroundColorMenu: backgroundColorMenu,
       initPositionSelected: initPositionSelected,
       enableShadowItensMenu: enableShadowItensMenu,
       typeOpen: typeOpen,

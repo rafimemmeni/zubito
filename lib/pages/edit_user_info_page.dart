@@ -251,6 +251,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                                       if (userSaveButtonCaption != "Save") {
                                         Order order = Order();
                                         order.uid = userInfo.uid;
+                                        order.deliveryCharge = await getDeliveryCharge(productNotifier.currentLocationInfo);
 
                                         order.address = userInfo.address;
                                         order.location =
@@ -262,10 +263,14 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
                                         //     .then((prefs) async {
                                         //   order.location = productNotifier
                                         //       .currentLocationInfo;
-
+                                        Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                                              .pop(); 
                                         openAlertBox(context, themeColor);
+                                         
                                         // });
                                       } else {
+                                         Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                                          .pop(); 
                                         Scaffold.of(context)
                                             .showSnackBar(SnackBar(
                                           backgroundColor: mainColor,
@@ -435,7 +440,8 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
     try {
       LoaderDialog.showLoadingDialog(context, _keyLoader, "Processing..");
       await saveUser(userInfo);
-
+      // Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+      //     .pop();
      // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     } catch (error) {
       print(error);
@@ -445,8 +451,8 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
   Future<void> saveOrderHandle(
       Order order, ProductNotifier productNotifier) async {
     try {
-      LoaderDialog.showLoadingDialog(
-          context, _keyLoader, "Processing..");
+      // LoaderDialog.showLoadingDialog(
+      //     context, _keyLoader, "Processing..");
 
       List<OrderItem> _orderItems = [];
       for (var cart in productNotifier.cartByUserList) {
@@ -469,8 +475,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
       await saveOrder(order, _orderItems);
       await clearCart(order.uid);
 
-      Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-          .pop(); //close the dialoge
+     //close the dialoge
       //Navigator.pushReplacementNamed(context, "/home");
     } catch (error) {
       print(error);

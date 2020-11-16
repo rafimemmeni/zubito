@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 const List<String> discountImageList = [
-  '1.png',
-  '2.png',
-  '3.png',
   '4.png',
+  '6.png',
+  '7.png',
+  '8.png',
 ];
 Future<Widget> _getImage(String image) async {
   Image m;
@@ -26,7 +26,7 @@ Future<dynamic> loadFromStorage(String image) async {
   return await FirebaseStorage.instance.ref().child(image).getDownloadURL();
 }
 
-List<Widget> imageSliders = discountImageList
+List<Widget> imageSlidersTwo = discountImageList
     .map((item) => Container(
           decoration: BoxDecoration(
             boxShadow: [
